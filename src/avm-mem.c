@@ -6,6 +6,43 @@
 avm_memcell stack[AVM_STACKSIZE];
 avm_memcell ax, bx, cv, retval;
 
+typedef void (*memclear_func_t)(avm_memcell*);
+/**
+* @brief Called by avm_mem_cell_clear to free the string data type
+* @param m The memcell to be cleared
+*/
+static void memclear_string(avm_memcell* m)
+{
+	assert(m->data.strVal);
+	free(m->data.strVal);
+}
+
+
+/**
+* @brief Called by avm_mem_cell_clear to free the table data type
+* @param m The memcell to be cleared
+*/
+static void memclear_table(avm_memcell* m)
+{
+	assert(m->data.tableVal);
+	avm_tabledec_refcounter(m->data.tableVal);
+}
+
+/*
+ Function table used to call the correct memclear
+ function based on the memcell type
+*/
+memclear_func_t memclearFuncs[] = {
+	0,		/* number*/
+	memclear_string,
+	0,		/* bool */
+	memclear_table,
+	0,		/* userfunc */
+	0,		/* libfunc */
+	0,		/* nil */
+	0,		/* undef */
+};
+
 /**
 * @brief Used to initialize the stack module
 */
@@ -24,7 +61,7 @@ void avm_table_inc_refcounter(avm_table *table) {
     ++table->refCounter;
 }
 
-void avm_tabledec_refcounter(avm_table *table) {
+void avm_table_dec_refcounter(avm_table *table) {
 	assert(table->refCounter > 0);
     
 	/* Activate garbage collection... */
@@ -60,26 +97,15 @@ void avm_mem_cell_clear(avm_memcell* m)
 {
 	assert(m);
 
+	if(m->type == undef_m) return;
+
+	memclear_func_t f = memclearFuncs[m->type];
+
 	/* Free the correct data based on its type */
-	switch (m->type)
-	{
-		case string_m:
-			free(m->data.strVal);
-			break;
-		
-		case libfunc_m:
-			free(m->data.libfuncVal);
-			break;
-
-		case table_m:
-			assert(m->data.tableVal);
-    		avm_table_dec_ref_counter(m->data.tableVal);
-			break;
-
-		default:
-			break;
-	}
-	return;
+	if(f)
+		(*f)(m);
+	
+	m->type = undef_m;
 }
 
 void avm_table_buckets_destroy(avm_table_bucket** p)

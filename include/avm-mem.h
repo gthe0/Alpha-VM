@@ -95,7 +95,7 @@ void avm_table_inc_refcounter(avm_table *table);
 * @brief Decrements the refcounter of a table
 * @param table The table to which we will decrement the refcoutner 
 */
-void avm_tabledec_refcounter(avm_table *table);
+void avm_table_dec_refcounter(avm_table *table);
 
 /**
 * @brief Initializes the buckets of a table
