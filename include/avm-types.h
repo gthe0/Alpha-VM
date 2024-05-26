@@ -1,12 +1,12 @@
-/*----------------------------------------------------------*/
-/* Authors: csd4881, csd4988, csd5038						*/
-/* 														    */
-/* avm-types.h												*/
-/* 														    */
-/* Type definitions of the various structs and enums used	*/
-/* for the target code generation to a binary format that	*/	
-/* the avm recognizes and executes							*/
-/*----------------------------------------------------------*/
+/*
+ 	Authors: csd4881, csd4988, csd5038														
+	
+	avm-types.h										
+														
+	Type definitions for the various instructions that
+	were used in the binary file production which the
+ 	AVM owes to recognize and execute
+*/
 
 #ifndef AVM_TYPES_H
 #define AVM_TYPES_H
