@@ -1,12 +1,16 @@
 #include <avm-mem.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
 avm_memcell stack[AVM_STACKSIZE];
-avm_memcell ax, bx, cv, retval;
+avm_memcell ax, bx, cx, retval;
+
+static unsigned top, topsp;
 
 typedef void (*memclear_func_t)(avm_memcell*);
+
 /**
 * @brief Called by avm_mem_cell_clear to free the string data type
 * @param m The memcell to be cleared
@@ -15,6 +19,16 @@ static void memclear_string(avm_memcell* m)
 {
 	assert(m->data.strVal);
 	free(m->data.strVal);
+}
+
+/**
+* @brief Called by avm_mem_cell_clear to free the libfunc data type
+* @param m The memcell to be cleared
+*/
+static void memclear_lib(avm_memcell* m)
+{
+	assert(m->data.libfuncVal);
+	free(m->data.libfuncVal);
 }
 
 
@@ -38,7 +52,7 @@ memclear_func_t memclearFuncs[] = {
 	0,		/* bool */
 	memclear_table,
 	0,		/* userfunc */
-	0,		/* libfunc */
+	memclear_lib,
 	0,		/* nil */
 	0,		/* undef */
 };
@@ -139,3 +153,91 @@ void avm_table_destroy (avm_table* t)
 	free(t);
 }
 
+void avm_assign(avm_memcell* lv, avm_memcell* rv)
+{
+	/* No need for assignment here, they are the same*/
+	if	(lv == rv)	
+		return ;
+
+	/* If they are references to the same table,
+	 there is no need for assignment
+	*/
+	if	(lv->type == table_m &&
+		 rv->type == table_m &&
+		 lv->data.tableVal == rv->data.tableVal)	
+		return;
+
+	/* Clear the old cell to replace it with the rv*/
+	avm_mem_cell_clear(lv);		
+	memcpy(lv,rv,sizeof(avm_memcell));
+
+	/* Now we deep copy the data to make sure it does not get deleted */
+	if	(lv->type == string_m)
+		lv->data.strVal = strdup(rv->data.strVal);
+	else 
+	if	(lv->type == libfunc_m)
+		lv->data.strVal = strdup(rv->data.libfuncVal);
+	else
+	if	(lv->type == table_m)
+		avm_table_inc_refcounter(lv->data.tableVal);
+}
+
+
+avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
+{
+	assert(arg);
+
+	switch (arg->type)
+	{
+		case global_a:	return &stack[AVM_STACKSIZE-arg->val-1];
+		case local_a:	return &stack[topsp-arg->val];
+		case formal_a:	return &stack[topsp+AVM_STACKENV_SIZE+arg->val+1];
+
+		case retval_a:	return &retval;
+
+		case number_a:
+		{
+			reg->type = number_m;
+			reg->data.numVal = consts_getnumber(arg->val);
+			return reg;
+		}
+		
+		case string_a:
+		{
+			reg->type = string_m;
+			reg->data.numVal = consts_getnumber(arg->val);
+			return reg;
+		}
+		
+		case bool_a:
+		{
+			reg->type = bool_m;
+			reg->data.numVal = arg->val;
+			return reg;
+		}
+
+		case undef_a:
+		case nil_a:	reg->type = nil_m;	return reg;
+		
+		case userfunc_a:
+		{
+			reg->type = userfunc_m;
+			reg->data.numVal = arg->val;	/* shallow copy it */
+			return reg;
+		}
+
+		case libfunc_a:
+		{
+			reg->type = libfunc_m;
+			reg->data.libfuncVal = libfuncs_getuesd(arg->val);
+			return reg;
+		}
+
+		default:
+			break;
+	}
+
+
+
+	return;
+}

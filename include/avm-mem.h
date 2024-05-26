@@ -122,4 +122,19 @@ void avm_table_buckets_destroy(avm_table_bucket** p);
 */
 void avm_table_destroy (avm_table* t);
 
+/**
+* @brief used for lvalue assignments  
+* @param lv The lvalue of the assignment
+* @param rv The rvalue of the assignment
+*/
+void avm_assign(avm_memcell* lv, avm_memcell* rv);
+
+/**
+ * @brief used to translate the operands (vmarg_T) into avm_memcells
+ * @param arg The argument to be translated
+ * @param reg The memcell to 
+ * @return The result of the translation
+*/
+avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg);
+
 #endif /* avm module */
