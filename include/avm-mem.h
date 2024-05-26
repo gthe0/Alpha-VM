@@ -17,6 +17,8 @@
 
 #define AVM_WIPEOUT(m) memset(&(m),0,sizeof(m))
 
+/* Used to gain access to the variables */
+extern unsigned int top, topsp; 
 
 /* Module typedefintion */
 typedef struct avm_table avm_table, *AVM_T;
@@ -136,5 +138,16 @@ void avm_assign(avm_memcell* lv, avm_memcell* rv);
  * @return The result of the translation
 */
 avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg);
+
+/**
+* @brief decreases the top counter of the stack  
+*/
+void avm_dec_top(void);
+
+/**
+* @brief Used to store the enviroment information in the stack
+* @param val the value to be pushed in the stack
+*/
+void avm_push_envvalue(unsigned val);
 
 #endif /* avm module */

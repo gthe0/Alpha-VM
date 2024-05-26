@@ -40,6 +40,18 @@ static void memclear_table(avm_memcell* m)
 	avm_tabledec_refcounter(m->data.tableVal);
 }
 
+/**
+* @brief Used to store the enviroment information in the stack
+* @param val the value to be pushed in the stack
+*/
+void avm_push_envvalue(unsigned val)
+{
+	stack[top].type = number_m;
+	stack[top].data.numVal = val;
+
+	avm_dec_top();
+}
+
 /*
  Function table used to call the correct memclear
  function based on the memcell type
@@ -232,3 +244,20 @@ avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
 	return;
 }
 
+void avm_dec_top(void)
+{
+	if (!top)
+	{
+		perror("TEMP ERROR LOGGING FUNCTION\n");
+	}
+	else
+		--top;
+}
+
+void avm_push_envvalue(unsigned val)
+{
+	stack[top].type = number_m;
+	stack[top].data.numVal = val;
+
+	avm_dec_top();
+}
