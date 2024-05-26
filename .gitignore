@@ -1,0 +1,15 @@
+# Ignore compiled object files
+*.o
+
+# Ignore executables and objects
+bin
+build
+
+# Ignore text files
+*.txt
+
+# Ignore Generators output
+*results*
+
+# Ignore vscode build settings
+.vscode
