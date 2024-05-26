@@ -1,9 +1,18 @@
+/*
+ 	Authors: csd4881, csd4988, csd5038														
+	
+	avm-mem.c										
+
+	Here we implement the avm-table ADT
+*/
+
 #include <avm-mem.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
+/* Stack module */
 avm_memcell stack[AVM_STACKSIZE];
 avm_memcell ax, bx, cx, retval;
 

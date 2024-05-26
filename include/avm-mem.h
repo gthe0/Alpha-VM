@@ -3,7 +3,7 @@
 	
 	avm-mem.h										
 
-	Here we define the avm-table module
+	Here we define the avm-table ADT
 */
 
 #ifndef AVM_MEM_H
