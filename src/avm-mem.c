@@ -22,17 +22,6 @@ static void memclear_string(avm_memcell* m)
 }
 
 /**
-* @brief Called by avm_mem_cell_clear to free the libfunc data type
-* @param m The memcell to be cleared
-*/
-static void memclear_lib(avm_memcell* m)
-{
-	assert(m->data.libfuncVal);
-	free(m->data.libfuncVal);
-}
-
-
-/**
 * @brief Called by avm_mem_cell_clear to free the table data type
 * @param m The memcell to be cleared
 */
@@ -52,14 +41,11 @@ memclear_func_t memclearFuncs[] = {
 	0,		/* bool */
 	memclear_table,
 	0,		/* userfunc */
-	memclear_lib,
+	0,		/* libfunc */
 	0,		/* nil */
 	0,		/* undef */
 };
 
-/**
-* @brief Used to initialize the stack module
-*/
 void avm_initstack(void)
 {
 	for (unsigned i = 0; i < AVM_STACKSIZE ; i++)
@@ -175,9 +161,6 @@ void avm_assign(avm_memcell* lv, avm_memcell* rv)
 	if	(lv->type == string_m)
 		lv->data.strVal = strdup(rv->data.strVal);
 	else 
-	if	(lv->type == libfunc_m)
-		lv->data.strVal = strdup(rv->data.libfuncVal);
-	else
 	if	(lv->type == table_m)
 		avm_table_inc_refcounter(lv->data.tableVal);
 }
@@ -205,7 +188,7 @@ avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
 		case string_a:
 		{
 			reg->type = string_m;
-			reg->data.numVal = consts_getnumber(arg->val);
+			reg->data.numVal = strdup(consts_getnumber(arg->val));
 			return reg;
 		}
 		
@@ -237,7 +220,6 @@ avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
 			break;
 	}
 
-
-
 	return;
 }
+

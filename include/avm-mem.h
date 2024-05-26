@@ -53,7 +53,7 @@ struct avm_memcell
         char			boolVal;
         AVM_T 			tableVal;
         unsigned int 	funcVal; 
-        char*			libfuncVal;
+        unsigned int	libfuncVal;
     } data;
 };
 
