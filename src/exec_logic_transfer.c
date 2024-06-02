@@ -105,7 +105,11 @@ void execute_jeq(Instruction_T instr)
 		result = avm_tobool(rv1) == avm_tobool(rv2);
 	else
 	if (rv1->type != rv2->type)
-		avm_log(ERROR,"'undef' involved in equality!\n");	
+		avm_log (
+			ERROR,"%s == %s is illegal!\n",
+			typeString[rv1->type],
+			typeString[rv2->type]
+			);	
 	else
 	{
 		/* I was bored to implement functions so that is what you get */
@@ -160,7 +164,11 @@ void execute_jne(Instruction_T instr)
 		result = avm_tobool(rv1) == avm_tobool(rv2);
 	else
 	if (rv1->type != rv2->type)
-		avm_log(ERROR,"'undef' involved in equality!\n");	
+		avm_log (
+			ERROR,"%s == %s is illegal!\n",
+			typeString[rv1->type],
+			typeString[rv2->type]
+			);
 	else
 	{
 		/* I was bored to implement functions so that is what you get */

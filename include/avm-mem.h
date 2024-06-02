@@ -113,6 +113,12 @@ void avm_table_buckets_init(avm_table_bucket** p);
 */
 void avm_mem_cell_clear(avm_memcell* m);
 
+/**
+* @brief Creates a new avm table
+*
+* @return The avm table 
+*/
+avm_table* avm_table_new(void);
 
 /**
 * @brief Destroy a bucket of a table
@@ -151,5 +157,29 @@ void avm_dec_top(void);
 * @param val the value to be pushed in the stack
 */
 void avm_push_envvalue(unsigned val);
+
+/**
+* @brief Get an element from a table, at a certain index 
+* 
+* @param table The table containing the element
+* @param index The index of the element
+*
+* @return table[index]
+*/
+avm_memcell* avm_tablegetelem (
+	avm_table* table,
+	avm_memcell* index);
+
+/**
+* @brief Set an element in a table, at a certain index 
+* 
+* @param table The table to which we put the elemnent
+* @param index The index at which we put the elemnet
+* @param content The content we want to assign
+*/
+void avm_tablesetelem (
+	avm_table* table,
+	avm_memcell* index,
+	avm_memcell* content);
 
 #endif /* avm module */

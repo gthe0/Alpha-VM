@@ -11,6 +11,9 @@
 
 typedef enum error_level_t error_level_t;
 
+/* Arrays used to log the vairous types of args */
+extern char* typeString[];
+
 /* Enums for error levels*/
 enum error_level_t {
 	ERROR,
