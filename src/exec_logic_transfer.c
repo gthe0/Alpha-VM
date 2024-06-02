@@ -55,6 +55,36 @@ void execute_jump(Instruction_T instr)
 	return ;
 }
 
+/* typedefinition for the boolean convertion functions */
+typedef unsigned char (*tobool_func_t)(avm_memcell*);
+
+static unsigned char number_tobool(avm_memcell* m)		{ return m->data.numVal != 0;} 
+static unsigned char string_tobool(avm_memcell* m)		{ return m->data.strVal[0] != 0;}
+static unsigned char bool_tobool(avm_memcell* m)		{ return m->data.boolVal;}
+static unsigned char table_tobool(avm_memcell* m)		{ return 1;}
+static unsigned char userfunc_tobool(avm_memcell* m)	{ return 1;} 
+static unsigned char libfunc_tobool(avm_memcell* m)		{ return 1;} 
+static unsigned char nil_tobool(avm_memcell* m)			{ return 0;} 
+static unsigned char undef_tobool(avm_memcell* m)		{ assert(0); return 0;} 
+
+static tobool_func_t toBoolFuncs[] = {
+	number_tobool,
+	string_tobool,
+	bool_tobool,
+	table_tobool,
+	userfunc_tobool,
+	libfunc_tobool,
+	nil_tobool,
+	undef_tobool
+};
+
+/* Function used to turn things into booleans */
+static unsigned char avm_tobool(avm_memcell* m)
+{
+	assert(m && m->type >= 0 && m->type < undef_m);
+	return (*toBoolFuncs[m->type])(m);
+}
+
 /* jeq label arg1 arg2 */
 void execute_jeq(Instruction_T instr)
 {
@@ -69,17 +99,36 @@ void execute_jeq(Instruction_T instr)
 		avm_log(ERROR,"'undef' involved in equality!\n");	
 	else
 	if (rv1->type == nil_m || rv2->type == nil_m )
-		result == rv1->type == nil_m && rv2->type == nil_m;
+		result = rv1->type == nil_m && rv2->type == nil_m;
 	else
 	if (rv1->type == bool_m || rv2->type == bool_m )
-		/* ADD AVM TO BOOL*/
-		result == rv1->type == nil_m && rv2->type == nil_m;
+		result = avm_tobool(rv1) == avm_tobool(rv2);
 	else
 	if (rv1->type != rv2->type)
 		avm_log(ERROR,"'undef' involved in equality!\n");	
 	else
-		/*EQ TEST*/	
-		return;
+	{
+		/* I was bored to implement functions so that is what you get */
+		switch (rv1->type)
+		{		
+			case number_m:
+				result = rv1->data.numVal == rv2->data.numVal;
+				break;
+			case string_m:
+				result = !strcmp(rv1->data.strVal, rv2->data.strVal);
+				break;
+			case libfunc_m:
+				result = !strcmp(rv1->data.libfuncVal, rv2->data.libfuncVal);
+				break;
+			case userfunc_m:
+				break;
+			case table_m:
+				result = rv1->data.tableVal == rv2->data.tableVal;
+				break;
+			default:
+				result = avm_tobool(rv1) == avm_tobool(rv2);
+		}
+	}
 
 	if(!executionFinished && result)
 		pc = instr->result.val;
@@ -105,17 +154,36 @@ void execute_jne(Instruction_T instr)
 		avm_log(ERROR,"'undef' involved in equality!\n");	
 	else
 	if (rv1->type == nil_m || rv2->type == nil_m )
-		result == rv1->type == nil_m && rv2->type == nil_m;
+		result = rv1->type == nil_m && rv2->type == nil_m;
 	else
 	if (rv1->type == bool_m || rv2->type == bool_m )
-		/* ADD AVM TO BOOL*/
-		result == rv1->type == nil_m && rv2->type == nil_m;
+		result = avm_tobool(rv1) == avm_tobool(rv2);
 	else
 	if (rv1->type != rv2->type)
 		avm_log(ERROR,"'undef' involved in equality!\n");	
 	else
-		/*EQ TEST*/	
-		return;
+	{
+		/* I was bored to implement functions so that is what you get */
+		switch (rv1->type)
+		{		
+			case number_m:
+				result = rv1->data.numVal == rv2->data.numVal;
+				break;
+			case string_m:
+				result = !strcmp(rv1->data.strVal, rv2->data.strVal);
+				break;
+			case libfunc_m:
+				result = !strcmp(rv1->data.libfuncVal, rv2->data.libfuncVal);
+				break;
+			case userfunc_m:
+				break;
+			case table_m:
+				result = rv1->data.tableVal == rv2->data.tableVal;
+				break;
+			default:
+				result = avm_tobool(rv1) == avm_tobool(rv2);
+		}
+	}
 
 	if(!executionFinished && !result)
 		pc = instr->result.val;
