@@ -1,5 +1,6 @@
 #include <dispatcher.h>
 #include <avm-mem.h>
+#include <avm-log.h>
 
 #include <assert.h>
 
@@ -33,8 +34,7 @@ void execute_arithmetic(Instruction_T instr)
 
 	if(rv1->type != number_a || rv2->type != number_a)
 	{
-		/* ADD AVM_ERROR */
-		exit(1);
+		avm_log(ERROR,"Arithmetic execution without using numbers\n");
 	}
 	else
 	{

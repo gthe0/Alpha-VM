@@ -6,7 +6,6 @@
 	Function used for logging avm errors
 */
 
-
 #ifndef AVM_LOG_H
 #define AVM_LOG_H
 
