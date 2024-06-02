@@ -38,7 +38,7 @@ void execute_transfer_logic(Instruction_T instr)
 	{
 		transfer_logic_func_t op = transfer_logic_funcs[instr->opcode - jgt_v];
 
-		if(!exec_finished && (*op)(rv1->data.numVal, rv2->data.numVal))
+		if(!executionFinished && (*op)(rv1->data.numVal, rv2->data.numVal))
 			pc = instr->result.val;
 	}
 	return ;
@@ -48,7 +48,7 @@ void execute_jump(Instruction_T instr)
 {
 	assert(instr && (instr->result.type == label_a));
 
-	if (!exec_finished)
+	if (!executionFinished)
 		pc  = instr->result.val;
 
 	return ;

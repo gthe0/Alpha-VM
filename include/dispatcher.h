@@ -3,6 +3,13 @@
 
 #include <avm-types.h>
 
+extern unsigned pc;
+extern unsigned currLine;
+extern unsigned codeSize;
+extern unsigned executionFinished;
+
+#define AVM_ENDING_PC codeSize
+
 #define execute_add execute_arithmetic
 #define execute_sub execute_arithmetic
 #define execute_mul execute_arithmetic
@@ -57,5 +64,10 @@ void execute_tablesetelem(Instruction_T);
 
 /* Execute nop */
 void execute_nop(Instruction_T);
+
+/**
+* @brief This Function defines the execution FSM of the AVM 
+*/
+void execute_cycle(void);
 
 #endif /* dispatcher lib */

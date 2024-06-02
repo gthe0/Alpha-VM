@@ -55,3 +55,6 @@ void execute_uminus(Instruction_T instr){}
 void execute_and(Instruction_T instr){}
 void execute_or(Instruction_T instr){}
 void execute_not(Instruction_T instr){}
+
+/* Execute nop (stub function)*/
+void execute_nop(Instruction_T instr){}
