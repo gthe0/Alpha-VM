@@ -42,14 +42,14 @@ void execute_or(Instruction_T);
 void execute_not(Instruction_T);
 
 /* Execute logic transfer insturctions */
+void execute_jump(Instruction_T);
+
 void execute_jeq(Instruction_T);
 void execute_jne(Instruction_T);
 void execute_jgt(Instruction_T);
 void execute_jge(Instruction_T);
 void execute_jlt(Instruction_T);
 void execute_jle(Instruction_T);
-
-void execute_jump(Instruction_T);
 
 /* Execute function related stuff */
 void execute_call(Instruction_T);
