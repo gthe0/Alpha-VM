@@ -9,10 +9,10 @@
 #define execute_div execute_arithmetic
 #define execute_mod execute_arithmetic
 
-#define execute_jle execute_transfer_logic
-#define execute_jge execute_transfer_logic
 #define execute_jgt execute_transfer_logic
+#define execute_jge execute_transfer_logic
 #define execute_jlt execute_transfer_logic
+#define execute_jle execute_transfer_logic
 
 /* General execution instructions */
 void execute_arithmetic(Instruction_T);
@@ -37,10 +37,12 @@ void execute_not(Instruction_T);
 /* Execute logic transfer insturctions */
 void execute_jeq(Instruction_T);
 void execute_jne(Instruction_T);
-void execute_jle(Instruction_T);
+void execute_jgt(Instruction_T);
 void execute_jge(Instruction_T);
 void execute_jlt(Instruction_T);
-void execute_jgt(Instruction_T);
+void execute_jle(Instruction_T);
+
+void execute_jump(Instruction_T);
 
 /* Execute function related stuff */
 void execute_call(Instruction_T);
