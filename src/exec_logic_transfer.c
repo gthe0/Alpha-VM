@@ -1,4 +1,5 @@
 #include <dispatcher.h>
+#include <avm-utils.h>
 #include <avm-mem.h>
 #include <avm-log.h>
 

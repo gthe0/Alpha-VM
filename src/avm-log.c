@@ -14,18 +14,6 @@
 
 extern unsigned executionFinished;
 
-/* Definition of the array in avm-log.h... */
-char* typeString[] = {
-	"number",
-	"string",
-	"bool",
-	"table",
-	"userfunc",
-	"libfunc",
-	"nil",
-	"undef"
-};
-
 void avm_log(error_level_t error ,const char* msg,...)
 {
 	/* If we are on linux machines, use ansi escape sequences */

@@ -5,6 +5,18 @@
 
 #include <assert.h>
 
+/* Definition of the array in avm-utils.h... */
+char* typeString[] = {
+	"number",
+	"string",
+	"bool",
+	"table",
+	"userfunc",
+	"libfunc",
+	"nil",
+	"undef"
+};
+
 /*
  Typedefinition of functions that 
  turn a memcell to a string
