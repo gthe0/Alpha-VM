@@ -1,3 +1,13 @@
+/*
+ 	Authors: csd4881, csd4988, csd5038														
+	
+	dispatcher.h										
+
+	Library used for 'dispatching' instructions.
+	Here we declare the various execution functions
+	and variables used in the execution cycle of the program...
+*/
+
 #ifndef DISPATCHER_H
 #define DISPATCHER_H
 
