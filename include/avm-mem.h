@@ -89,6 +89,12 @@ extern avm_memcell stack[AVM_STACKSIZE];
 extern avm_memcell ax, bx, cx, retval;
 extern unsigned int top, topsp, totalActuals; 
 
+
+/**
+* @brief Initialize the virtual machine's structs and variables
+*/
+void avm_initialize(void);
+
 /**
 * @brief Used to initialize the stack module
 */
