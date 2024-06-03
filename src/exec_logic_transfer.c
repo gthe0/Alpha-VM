@@ -123,9 +123,10 @@ void execute_jeq(Instruction_T instr)
 				result = !strcmp(rv1->data.strVal, rv2->data.strVal);
 				break;
 			case libfunc_m:
-				result = !strcmp(rv1->data.libfuncVal, rv2->data.libfuncVal);
+				result = rv1->data.libfuncVal == rv2->data.libfuncVal;
 				break;
 			case userfunc_m:
+				result = rv1->data.funcVal == rv2->data.funcVal;
 				break;
 			case table_m:
 				result = rv1->data.tableVal == rv2->data.tableVal;
@@ -182,9 +183,10 @@ void execute_jne(Instruction_T instr)
 				result = !strcmp(rv1->data.strVal, rv2->data.strVal);
 				break;
 			case libfunc_m:
-				result = !strcmp(rv1->data.libfuncVal, rv2->data.libfuncVal);
+				result = rv1->data.libfuncVal == rv2->data.libfuncVal;
 				break;
 			case userfunc_m:
+				result = rv1->data.funcVal == rv2->data.funcVal;
 				break;
 			case table_m:
 				result = rv1->data.tableVal == rv2->data.tableVal;

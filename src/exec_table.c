@@ -41,7 +41,15 @@ void execute_tablegetelem(Instruction_T instr)
 		if(content)
 			avm_assign(lv, content);
 		else
-		/* ADD WARNING */;
+		{
+			char* ts = avm_to_string(t);
+			char* is = avm_to_string(i);
+
+			avm_log(WARNING,"%s[%s] is Illegal\n",ts,is);			
+
+			free(ts);
+			free(is);
+		}
 	}
 
 	return ;

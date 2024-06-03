@@ -13,5 +13,12 @@
 /* Arrays used to log the vairous types of args */
 extern char* typeString[];
 
+/**
+* @brief Produces a string based on the contents of the memcell 
+* @param m The avm memory cell
+* 
+* @return The string produced 
+*/
+char* avm_to_string(avm_memcell* m);
 
 #endif /* avm utilities lib */

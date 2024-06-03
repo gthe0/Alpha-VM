@@ -32,13 +32,15 @@ typedef char* (*to_string_Funcs)(avm_memcell*);
  and use tabs with 4 spaces of length. I do not care about you reading it or about your opinion to my coding style that is constantly changing. Deal with it... */
 static char* string_to_string(avm_memcell* m) 		{ assert(m && m->type == string_m); return strdup(m->data.strVal);}
 static char* bool_to_string(avm_memcell* m)	 		{ assert(m && m->type == bool_m); return strdup( m->data.boolVal == 1 ? "true" : "false");}
-static char* libfunc_to_string(avm_memcell* m) 		{ assert(m && m->type == libfunc_m); return strdup(m->data.libfuncVal); }
+static char* libfunc_to_string(avm_memcell* m) 		{ assert(m && m->type == libfunc_m); return strdup(get_libFuncs(m->data.libfuncVal)); }
 static char* nil_to_string(avm_memcell* m)	 		{ assert(m && m->type == nil_m); return strdup("nil");} 
 static char* undef_to_string(avm_memcell* m) 		{ assert(0); return NULL;} 
 
 /* We will print the userfunc name and address here */
 static char* userfunc_to_string(avm_memcell* m) 
 {
+	assert(m && m->type == userfunc_m);
+
 	return NULL;
 } 
 
@@ -48,6 +50,10 @@ static char* userfunc_to_string(avm_memcell* m)
 */
 static char* table_to_string(avm_memcell* m)
 {
+	assert(m && m->type == table_m);
+
+	char* name = m->data.tableVal;
+
 	return NULL;
 }
 

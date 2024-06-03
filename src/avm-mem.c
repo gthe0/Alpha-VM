@@ -7,8 +7,11 @@
 */
 
 #include <avm-mem.h>
+#include <avm-log.h>
+#include <avm-reader.h>
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -202,14 +205,14 @@ avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
 		case number_a:
 		{
 			reg->type = number_m;
-			reg->data.numVal = consts_getnumber(arg->val);
+			reg->data.numVal = get_numConst(arg->val);
 			return reg;
 		}
 		
 		case string_a:
 		{
 			reg->type = string_m;
-			reg->data.numVal = strdup(consts_getnumber(arg->val));
+			reg->data.strVal = strdup(get_strConsts(arg->val));
 			return reg;
 		}
 		
@@ -220,22 +223,22 @@ avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
 			return reg;
 		}
 
-		case undef_a:
+		case undef_a: reg->type = undef_m;	return reg;
 		case nil_a:	reg->type = nil_m;	return reg;
 		
 		case userfunc_a:
 		{
 			reg->type = userfunc_m;
-			reg->data.numVal = arg->val;	/* shallow copy it */
+			reg->data.funcVal = arg->val;
 			return reg;
 		}
 
 		case libfunc_a:
 		{
 			reg->type = libfunc_m;
-			reg->data.libfuncVal = libfuncs_getuesd(arg->val);
+			reg->data.libfuncVal = arg->val;
 			return reg;
-		}
+		} 
 
 		default:
 			break;
