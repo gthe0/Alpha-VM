@@ -19,7 +19,7 @@
 avm_memcell stack[AVM_STACKSIZE];
 avm_memcell ax, bx, cx, retval;
 
-static unsigned top, topsp;
+unsigned top, topsp, totalActuals = 0;
 
 typedef void (*memclear_func_t)(avm_memcell*);
 

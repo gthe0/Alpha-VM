@@ -15,12 +15,17 @@
 #define AVM_STACKENV_SIZE 4
 #define AVM_TABLE_HASH_SIZE 211
 
+#define AVM_NUMACTUALS_OFFSET 4
+#define AVM_SAVEDPC_OFFSET 3
+#define AVM_SAVEDTOP_OFFSET 2
+#define AVM_SAVEDTOPSP_OFFSET 1
+
 #define AVM_WIPEOUT(m) memset(&(m),0,sizeof(m))
 
 /* Used to gain access to the variables */
 extern avm_memcell stack[AVM_STACKSIZE];
 extern avm_memcell ax, bx, cx, retval;
-extern unsigned int top, topsp; 
+extern unsigned int top, topsp, totalActuals; 
 
 /* Module typedefintion */
 typedef struct avm_table avm_table, *AVM_T;
