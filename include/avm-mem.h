@@ -164,6 +164,25 @@ void avm_dec_top(void);
 void avm_push_envvalue(unsigned val);
 
 /**
+* @brief Used to get the stored enviroment information from the stack
+* @param i the index of the value in the stack
+*/
+unsigned avm_get_envvalue(unsigned i);
+
+/**
+* @brief Used to get the total size of the stack
+*/
+unsigned avm_total_actuals(void);
+
+/**
+* @brief Used to get the stored enviroment information from the stack
+* @param i the index of the value in the stack
+*
+* @return The element/actual
+*/
+avm_memcell* avm_getactual(unsigned i);
+
+/**
 * @brief Get an element from a table, at a certain index 
 * 
 * @param table The table containing the element

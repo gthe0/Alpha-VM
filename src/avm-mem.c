@@ -253,13 +253,31 @@ void avm_push_envvalue(unsigned val)
 	avm_dec_top();
 }
 
+unsigned avm_get_envvalue(unsigned i)
+{
+	assert(stack[i].type == number_m);
+	unsigned val = (unsigned) stack[i].data.numval;
+	assert(stack[i].data.numVal == ((double) val));
+	return val;
+}
+
+unsigned avm_total_actuals(void)
+{
+	return avm_get_envvalue(topsp + AVM_NUMACTUALS_OFFSET);
+}
+
+avm_memcell* avm_getactual(unsigned i)
+{
+	assert( i < avm_total_actuals());
+	return &stack[topsp + AVM_STACKENV_SIZE + 1 + i ];
+}
+
 avm_memcell* avm_tablegetelem (
 	avm_table* table,
 	avm_memcell* index)
 {
 	return NULL;
 }
-
 
 void avm_tablesetelem (
 	avm_table* table,
@@ -268,4 +286,3 @@ void avm_tablesetelem (
 {
 	return ;
 }
-
