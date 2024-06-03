@@ -69,6 +69,12 @@ void avm_initstack(void)
 	return;
 }
 
+void avm_initialize (void)
+{
+	avm_initstack();
+	return ;
+}
+
 void avm_table_inc_refcounter(avm_table *table) {
     ++table->refCounter;
 }
