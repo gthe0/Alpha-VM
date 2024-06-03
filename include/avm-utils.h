@@ -9,6 +9,7 @@
 #ifndef AVM_UTILS_H
 #define AVM_UTILS_H
 
+#include <avm-mem.h>
 
 /* Arrays used to log the vairous types of args */
 extern char* typeString[];
