@@ -41,7 +41,7 @@ static char* userfunc_to_string(avm_memcell* m)
 {
 	assert(m && m->type == userfunc_m);
 
-	return NULL;
+	return strdup(get_UserFunc(m->data.funcVal).id);
 } 
 
 /*
@@ -52,9 +52,7 @@ static char* table_to_string(avm_memcell* m)
 {
 	assert(m && m->type == table_m);
 
-	char* name = m->data.tableVal;
-
-	return NULL;
+	return strdup("_table_");
 }
 
 /*
