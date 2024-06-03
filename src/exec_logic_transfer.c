@@ -4,6 +4,8 @@
 #include <avm-log.h>
 
 #include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 
 typedef int (*transfer_logic_func_t)	(double x, double y);
 

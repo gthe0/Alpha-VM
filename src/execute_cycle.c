@@ -1,4 +1,5 @@
 #include <dispatcher.h>
+#include <assert.h>
 
 /* Variables used for execution */
 unsigned pc = 0;

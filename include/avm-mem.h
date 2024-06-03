@@ -22,10 +22,6 @@
 
 #define AVM_WIPEOUT(m) memset(&(m),0,sizeof(m))
 
-/* Used to gain access to the variables */
-extern avm_memcell stack[AVM_STACKSIZE];
-extern avm_memcell ax, bx, cx, retval;
-extern unsigned int top, topsp, totalActuals; 
 
 /* Module typedefintion */
 typedef struct avm_table avm_table, *AVM_T;
@@ -88,6 +84,10 @@ struct avm_table
     unsigned total;
 };
 
+/* Used to gain access to the variables */
+extern avm_memcell stack[AVM_STACKSIZE];
+extern avm_memcell ax, bx, cx, retval;
+extern unsigned int top, topsp, totalActuals; 
 
 /**
 * @brief Used to initialize the stack module

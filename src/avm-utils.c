@@ -3,8 +3,10 @@
 #include <avm-mem.h>
 #include <avm-log.h>
 
-#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 /* Definition of the array in avm-utils.h... */
 char* typeString[] = {
@@ -115,5 +117,5 @@ char* avm_to_string(avm_memcell* m)
 {
 	assert(m && m->type >= 0 && m->type <= undef_m );
 
-	return	Stringify_cell[m->type];
+	return	(*Stringify_cell[m->type])(m);
 }

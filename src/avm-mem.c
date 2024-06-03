@@ -40,7 +40,7 @@ static void memclear_string(avm_memcell* m)
 static void memclear_table(avm_memcell* m)
 {
 	assert(m->data.tableVal);
-	avm_tabledec_refcounter(m->data.tableVal);
+	avm_table_dec_refcounter(m->data.tableVal);
 }
 
 /*
@@ -78,7 +78,7 @@ void avm_table_dec_refcounter(avm_table *table) {
     
 	/* Activate garbage collection... */
 	if (!--table->refCounter) 
-		avm_tabledestroy(table); 
+		avm_table_destroy(table); 
 }
 
 void avm_table_buckets_init(avm_table_bucket** p)
@@ -96,11 +96,11 @@ avm_table* avm_table_new(void)
 
     table->refCounter = table->total = 0;
 
-    avm_tablebuckets_init(table->numIndexed);
-    avm_tablebuckets_init(table->strIndexed);
-    avm_tablebuckets_init(table->boolIndexed);
-    avm_tablebuckets_init(table->userIndexed);
-    avm_tablebuckets_init(table->libIndexed);
+    avm_table_buckets_init(table->numIndexed);
+    avm_table_buckets_init(table->strIndexed);
+    avm_table_buckets_init(table->boolIndexed);
+    avm_table_buckets_init(table->userIndexed);
+    avm_table_buckets_init(table->libIndexed);
 
     return table;
 }
@@ -124,7 +124,7 @@ void avm_table_buckets_destroy(avm_table_bucket** p)
 {
 	for (unsigned i = 0; i < AVM_TABLE_HASH_SIZE ; i++, p++)
 	{
-		for (avm_table_bucket* b = p; i < b;)
+		for (avm_table_bucket* b = *p; b;)
 		{
 			avm_table_bucket* del = b;
 			b = b->next;
@@ -232,7 +232,7 @@ avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
 			break;
 	}
 
-	return;
+	return NULL;
 }
 
 void avm_dec_top(void)
@@ -256,7 +256,7 @@ void avm_push_envvalue(unsigned val)
 unsigned avm_get_envvalue(unsigned i)
 {
 	assert(stack[i].type == number_m);
-	unsigned val = (unsigned) stack[i].data.numval;
+	unsigned val = (unsigned) stack[i].data.numVal;
 	assert(stack[i].data.numVal == ((double) val));
 	return val;
 }

@@ -3,6 +3,7 @@
 #include <avm-log.h>
 #include <avm-mem.h>
 
+#include <stdlib.h>
 #include <assert.h>
 
 void execute_newtable(Instruction_T instr)
