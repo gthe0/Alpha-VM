@@ -9,6 +9,7 @@
 #include <avm-mem.h>
 #include <avm-log.h>
 #include <avm-reader.h>
+#include <dispatcher.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -257,6 +258,16 @@ void avm_push_envvalue(unsigned val)
 	stack[top].data.numVal = val;
 
 	avm_dec_top();
+}
+
+void avm_call_saveenviroment(void)
+{
+	avm_push_envvalue(totalActuals);
+	avm_push_envvalue(pc+1);
+	avm_push_envvalue(top+totalActuals+2);
+	avm_push_envvalue(topsp);
+
+	return ;
 }
 
 unsigned avm_get_envvalue(unsigned i)
