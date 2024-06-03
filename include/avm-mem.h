@@ -178,7 +178,7 @@ unsigned avm_get_envvalue(unsigned i);
 /**
 * @brief Used to push enviroments in the stack
 */
-void avm_call_saveenviroment(void);
+void avm_call_saveenvironment(void);
 
 /**
 * @brief Used to get the total size of the stack

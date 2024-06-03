@@ -260,7 +260,7 @@ void avm_push_envvalue(unsigned val)
 	avm_dec_top();
 }
 
-void avm_call_saveenviroment(void)
+void avm_call_saveenvironment(void)
 {
 	avm_push_envvalue(totalActuals);
 	avm_push_envvalue(pc+1);
