@@ -5,6 +5,7 @@
 
 #include <assert.h>
 
+/* Pushes arguments to the stack */
 void execute_pusharg(Instruction_T instr)
 {
 	avm_memcell* arg = avm_translate_operand(&instr->result,&ax);
@@ -20,6 +21,7 @@ void execute_pusharg(Instruction_T instr)
 	return ;
 }
 
+/* Enters a function, pushes things to the stack */
 void execute_funcenter(Instruction_T instr)
 {
 	avm_memcell* func  = avm_translate_operand(&instr->result, &ax);
@@ -37,7 +39,7 @@ void execute_funcenter(Instruction_T instr)
 	return;
 }
 
-
+/* Exits the function, pops the stack */
 void execute_funcexit(Instruction_T instr)
 {
 	unsigned oldTop = top ;

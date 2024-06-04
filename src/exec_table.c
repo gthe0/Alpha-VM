@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
+/* Creates a new table entry */
 void execute_newtable(Instruction_T instr)
 {
 	avm_memcell* lv = avm_translate_operand(&instr->result, (avm_memcell*) 0);
@@ -19,7 +20,7 @@ void execute_newtable(Instruction_T instr)
 	return ;
 }
 
-
+/* executes table[index]; */
 void execute_tablegetelem(Instruction_T instr)
 {
 	avm_memcell* lv = avm_translate_operand(&instr->result, (avm_memcell*) 0);
@@ -56,7 +57,7 @@ void execute_tablegetelem(Instruction_T instr)
 	return ;
 }
 
-
+/* executes table[index] = content; */
 void execute_tablesetelem(Instruction_T instr)
 {
 	avm_memcell* t = avm_translate_operand(&instr->arg1, (avm_memcell*) 0);

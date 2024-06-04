@@ -59,6 +59,7 @@ memclear_func_t memclearFuncs[] = {
 	0,		/* undef */
 };
 
+/* Initializes the stack */
 void avm_initstack(void)
 {
 	for (unsigned i = 0; i < AVM_STACKSIZE ; i++)
@@ -70,6 +71,7 @@ void avm_initstack(void)
 	return;
 }
 
+/* Initializes all the structs of the vm */
 void avm_initialize (void)
 {
 	avm_initstack();
@@ -95,7 +97,7 @@ void avm_table_buckets_init(avm_table_bucket** p)
 		p[i] = (avm_table_bucket*)0; 
 }
 
-
+/* Creates a new avm_table */
 avm_table* avm_table_new(void)
 {
     avm_table *table = malloc(sizeof(avm_table));
@@ -112,6 +114,7 @@ avm_table* avm_table_new(void)
     return table;
 }
 
+/* Clears the memory cells */
 void avm_mem_cell_clear(avm_memcell* m)
 {
 	assert(m);
@@ -127,6 +130,7 @@ void avm_mem_cell_clear(avm_memcell* m)
 	m->type = undef_m;
 }
 
+/* Destructor of the avm table buckets */
 void avm_table_buckets_destroy(avm_table_bucket** p)
 {
 	for (unsigned i = 0; i < AVM_TABLE_HASH_SIZE ; i++, p++)
@@ -147,6 +151,7 @@ void avm_table_buckets_destroy(avm_table_bucket** p)
 	}
 }
 
+/* Destructor of the avm table buckets */
 void avm_table_destroy (avm_table* t)
 {
 	avm_table_buckets_destroy(t->numIndexed);
@@ -184,7 +189,11 @@ void avm_assign(avm_memcell* lv, avm_memcell* rv)
 		avm_table_inc_refcounter(lv->data.tableVal);
 }
 
-
+/*
+ This here is the most important function,
+ turning instructions into memory cells to be
+ proccessed by the AVM
+*/
 avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
 {
 	assert(arg);
