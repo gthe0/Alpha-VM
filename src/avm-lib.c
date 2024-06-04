@@ -18,7 +18,7 @@
 #include <math.h>
 
 /*totalargs function*/
-void libfunc_totalarguments (void)
+static void libfunc_totalarguments (void)
 {
 	/* Get topsp of prev activation record.
 	*/
@@ -43,7 +43,7 @@ void libfunc_totalarguments (void)
 
 /* Just prints all the arguments 
 by turning them to string first */
-void libfunc_print(void)
+static void libfunc_print(void)
 {
 	unsigned n = avm_total_actuals();
 
@@ -56,7 +56,7 @@ void libfunc_print(void)
 }
 
 /* Retruns the typeof of an argument */
-void libfunc_typeof(void)
+static void libfunc_typeof(void)
 {
 	unsigned n = avm_total_actuals();
 
@@ -73,7 +73,7 @@ void libfunc_typeof(void)
 }
 
 /* Returns nth argument */
-void libfunc_argument(void)
+static void libfunc_argument(void)
 {
 	/* Get topsp of prev activation record.
 	*/
@@ -103,7 +103,7 @@ void libfunc_argument(void)
 
 
 /* Arithmetic operations */
-void libfunc_sin(void)
+static void libfunc_sin(void)
 {
 	/* Basically we call sin which exist already...*/
 	unsigned n = avm_total_actuals();
@@ -129,7 +129,7 @@ void libfunc_sin(void)
 }
 
 
-void libfunc_cos(void)
+static void libfunc_cos(void)
 {
 	/* Basically we call cos which exist already...*/
 	unsigned n = avm_total_actuals();
@@ -154,7 +154,7 @@ void libfunc_cos(void)
 	}
 }
 
-void libfunc_sqrt(void)
+static void libfunc_sqrt(void)
 {
 	/* Basically we call sin which exist already...*/
 	unsigned n = avm_total_actuals();
@@ -218,25 +218,57 @@ void libfunc_strtonum(void)
 }
 
 /* Object related functions */
-void libfunc_objectmemberkeys(void)
+static void libfunc_objectmemberkeys(void)
 {
 
 }
 
-void  libfunc_objecttotalmembers(void)
+static void  libfunc_objecttotalmembers(void)
 {
 
 }
 
-void libfunc_objectcopy(void)
+static void libfunc_objectcopy(void)
 {
 
 
 }
 
 /* Input getter function */
-void libfunc_input(void)
+static void libfunc_input(void)
 {
 
 
+}
+
+#define NO_OF_LIBFUNCTS 12
+
+static library_map lib_map[] = {
+	{"print",libfunc_print},
+	{"typeof",libfunc_typeof},
+	{"input",libfunc_input},
+	{"cos",libfunc_cos},
+	{"sin",libfunc_sin},
+	{"sqrt",libfunc_sqrt},
+	{"strtonum",libfunc_strtonum},
+	{"argument",libfunc_argument},
+	{"totalarguments",libfunc_totalarguments},
+	{"objectmemberkeys",libfunc_objectmemberkeys},
+	{"objectcopy",libfunc_objectcopy},
+	{"objecttotalmembers",libfunc_objecttotalmembers}
+};
+
+/* find the right function */
+void execute_lib_func(char* id)
+{
+	for (int i = 0; i < NO_OF_LIBFUNCTS; i++)
+	{
+		if(!strcmp(id,lib_map[i].id))
+		{
+			library_func_t func = lib_map[i].func;	
+			(*func)();
+		}
+	}
+	
+	return ;
 }
