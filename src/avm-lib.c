@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include <math.h>
 
@@ -49,7 +50,7 @@ static void libfunc_print(void)
 
 	for (unsigned i = 0; i < n; i++)
 	{
-		char* s = avm_tostring(avm_getactual(i));
+		char* s = avm_to_string(avm_getactual(i));
 		puts(s);
 		free(s);
 	}

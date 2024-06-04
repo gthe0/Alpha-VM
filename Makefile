@@ -21,7 +21,7 @@ object: $(OBJ_FILES)
 
 # Compile the parser
 compile: $(INCLUDE) $(SRC) $(BIN)
-	gcc -g -I $(INCLUDE) src/**.c -o $(BIN)/avm.out
+	gcc -g -I $(INCLUDE) src/**.c -lm -o $(BIN)/avm.out
 	
 # Compile each source file into its object file individually
 $(BUILD_DIR)/%.o: $(SRC)/%.c | $(BUILD_DIR)
