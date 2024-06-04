@@ -120,7 +120,7 @@ static void libfunc_sin(void)
 
 		if(num->type != number_m)
 		{
-			avm_log(ERROR,"Argument of 'sin' was not a string\n");
+			avm_log(ERROR,"Argument of 'sin' was not a number\n");
 			return;
 		}
 
@@ -146,7 +146,7 @@ static void libfunc_cos(void)
 
 		if(num->type != number_m)
 		{
-			avm_log(ERROR,"Argument of 'cos' was not a string\n");
+			avm_log(ERROR,"Argument of 'cos' was not a number\n");
 			return;
 		}
 
@@ -171,7 +171,7 @@ static void libfunc_sqrt(void)
 
 		if(num->type != number_m)
 		{
-			avm_log(ERROR,"Argument of 'sqrt' was not a string\n");
+			avm_log(ERROR,"Argument of 'sqrt' was not a number\n");
 			return;
 		}
 
@@ -226,7 +226,29 @@ static void libfunc_objectmemberkeys(void)
 
 static void  libfunc_objecttotalmembers(void)
 {
+	/* Basically we return the total field...*/
+	unsigned n = avm_total_actuals();
 
+	if(n != 1)
+	{
+		avm_log(ERROR,"one argument (not %d) expected in 'objecttotalmembers'\n",n);
+	}
+	else
+	{
+		avm_mem_cell_clear(&retval);
+		avm_memcell* table = avm_getactual(0);
+
+		char* endptr;
+
+		if(table->type != table_m)
+		{
+			avm_log(ERROR,"Argument of 'objecttotalmembers' was not a table\n");
+			return;
+		}
+
+		retval.type = number_m;
+		retval.data.numVal = table->data.tableVal->total;
+	}
 }
 
 static void libfunc_objectcopy(void)

@@ -55,6 +55,7 @@ void execute_funcexit(Instruction_T instr)
 	return ;
 }
 
+/* Execute object calls */
 void execute_call(Instruction_T instr)
 {
 	return ;

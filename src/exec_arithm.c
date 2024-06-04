@@ -49,7 +49,17 @@ void execute_arithmetic(Instruction_T instr)
 }
 
 /* Will put it here to not create a whole new file... */
-void execute_assign(Instruction_T instr){return;}
+void execute_assign(Instruction_T instr)
+{
+	avm_memcell* lv = avm_translate_operand(&instr->result, (avm_memcell*)0);
+	avm_memcell* rv = avm_translate_operand(&instr->arg1, &ax);
+
+	assert(rv && lv && (&stack[AVM_STACKSIZE - 1] < lv && &stack[top] >= lv || lv == &retval));
+
+	avm_assign(lv,rv);
+
+	return;
+}
 
 /* stub function for uminus (it gets translated to mul)*/
 void execute_uminus(Instruction_T instr){}
