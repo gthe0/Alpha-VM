@@ -1,4 +1,6 @@
 #include <dispatcher.h>
+#include <avm-reader.h>
+
 #include <assert.h>
 
 /* Variables used for execution */
@@ -6,8 +8,6 @@ unsigned pc = 0;
 unsigned currLine = 0;
 unsigned codeSize = 0;
 unsigned executionFinished = 0;
-
-Instruction_T code = (Instruction_T) 0;
 
 /* typedefinition of the executeFuncs table */
 typedef void (*exec_func_t)(Instruction_T);
