@@ -32,7 +32,7 @@ void execute_arithmetic(Instruction_T instr)
 	assert(lv && (&stack[0] < lv && &stack[top] >= lv || lv == &retval));
 	assert(rv1 && rv2);
 
-	if(rv1->type != number_a || rv2->type != number_a)
+	if(rv1->type != number_m || rv2->type != number_m)
 	{
 		avm_log(ERROR,"Arithmetic execution without using numbers\n");
 	}
