@@ -52,7 +52,7 @@ void avm_log(error_level_t error ,const char* msg,...)
 	va_end(args);
 
 	/* If any error is encountered, stop the execution */
-	if (error = ERROR)	executionFinished = 1;
+	if (error == ERROR)	executionFinished = 1;
 
 	return ;
 }
