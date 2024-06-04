@@ -75,6 +75,9 @@ void avm_initstack(void)
 void avm_initialize (void)
 {
 	avm_initstack();
+	top = topsp = AVM_STACKSIZE - 1;
+	ax.type = bx.type = cx.type = retval.type = undef_m;
+
 	return ;
 }
 
