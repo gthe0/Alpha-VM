@@ -54,3 +54,8 @@ void execute_funcexit(Instruction_T instr)
 
 	return ;
 }
+
+void execute_call(Instruction_T instr)
+{
+	return ;
+}

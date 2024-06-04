@@ -138,7 +138,7 @@ void alpha_bin_reader(char* ist_name)
 	}
 
 	/* Read Instructions */
-	fread(codeSize,sizeof(unsigned),1,ost);
+	fread(&codeSize,sizeof(unsigned),1,ost);
 	fread(code,sizeof(instruction),codeSize,ost);
 
 	fclose(ost);

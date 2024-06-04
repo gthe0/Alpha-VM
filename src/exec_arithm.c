@@ -48,6 +48,9 @@ void execute_arithmetic(Instruction_T instr)
 	return ;
 }
 
+/* Will put it here to not create a whole new file... */
+void execute_assign(Instruction_T instr){return;}
+
 /* stub function for uminus (it gets translated to mul)*/
 void execute_uminus(Instruction_T instr){}
 
