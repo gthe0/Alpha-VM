@@ -96,7 +96,7 @@ void alpha_bin_reader(char* ist_name)
 
 	/* Read the total numbers of Library Functions */
 	fread(&total_namedLibfuncs, sizeof(unsigned),1,ist);
-	char** libfunc_string =  malloc(sizeof(char*)*total_namedLibfuncs);
+	namedLibfuncs =  malloc(sizeof(char*)*total_namedLibfuncs);
 	
 	for (int i = 0; i < total_namedLibfuncs; i++)
 	{
@@ -104,24 +104,21 @@ void alpha_bin_reader(char* ist_name)
 
 		fread(&length, sizeof(length),1,ist);
 
-		libfunc_string[i] = malloc(sizeof(char)*(length+1));
-		fread(libfunc_string[i],length*sizeof(char),1,ist);
+		namedLibfuncs[i] = malloc(sizeof(char)*(length+1));
+		fread(namedLibfuncs[i],length*sizeof(char),1,ist);
 
-		libfunc_string[i][length] = '\0';
+		namedLibfuncs[i][length] = '\0';
 	}
 
-
 	/* Read the user defined functions */
-	UserFunc_T user_func_array = NULL;
-	
 	fread(&total_userFuncs, sizeof(unsigned),1,ist);
-	user_func_array = malloc(sizeof(userfunc_t)*total_userFuncs);
+	userFuncs = malloc(sizeof(userfunc_t)*total_userFuncs);
 
 	for (int i = 0; i < total_userFuncs; i++)
 	{
 		/* Read each field separately... */
-		fread(&(user_func_array[i].address),sizeof(unsigned),1,ist);
-		fread(&(user_func_array[i].localSize),sizeof(unsigned),1,ist);
+		fread(&(userFuncs[i].address),sizeof(unsigned),1,ist);
+		fread(&(userFuncs[i].localSize),sizeof(unsigned),1,ist);
 
 		/*
 		 Read the id, but because it is constant,
@@ -135,7 +132,7 @@ void alpha_bin_reader(char* ist_name)
 		fread(str,length*sizeof(char),1,ist);
 
 		str[length] = '\0';
-		user_func_array[i].id = str;
+		userFuncs[i].id = str;
 	}
 
 	/* Read Instructions */

@@ -36,7 +36,7 @@ static char* string_to_string(avm_memcell* m) 		{ assert(m && m->type == string_
 static char* bool_to_string(avm_memcell* m)	 		{ assert(m && m->type == bool_m); return strdup( m->data.boolVal == 1 ? "true" : "false");}
 static char* libfunc_to_string(avm_memcell* m) 		{ assert(m && m->type == libfunc_m); return strdup(get_libFuncs(m->data.libfuncVal)); }
 static char* nil_to_string(avm_memcell* m)	 		{ assert(m && m->type == nil_m); return strdup("nil");} 
-static char* undef_to_string(avm_memcell* m) 		{ assert(0); return NULL;} 
+static char* undef_to_string(avm_memcell* m) 		{ return strdup("undef");} 
 
 /* We will print the userfunc name and address here */
 static char* userfunc_to_string(avm_memcell* m) 

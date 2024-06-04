@@ -9,7 +9,7 @@
 /* Creates a new table entry */
 void execute_newtable(Instruction_T instr)
 {
-	avm_memcell* lv = avm_translate_operand(&instr->result, (avm_memcell*) 0);
+	avm_memcell* lv = avm_translate_operand(&instr->arg1, (avm_memcell*) 0);
 	assert(lv && (&stack[AVM_STACKSIZE - 1] >= lv && lv>&stack[top] || lv == &retval));
 
 	lv->type = table_m;

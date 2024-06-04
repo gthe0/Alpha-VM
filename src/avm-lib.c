@@ -289,6 +289,10 @@ void execute_lib_func(char* id)
 		if(!strcmp(id,lib_map[i].id))
 		{
 			library_func_t func = lib_map[i].func;	
+			
+			topsp = top;
+			totalActuals = 0;
+
 			(*func)();
 		}
 	}
