@@ -14,6 +14,9 @@
 
 /* The extracted instructions... */
 extern Instruction_T code;
+extern unsigned codeSize;
+
+#define AVM_ENDING_PC codeSize
 
 /* Getters of array elements */
 userfunc_t get_UserFunc(unsigned int i);

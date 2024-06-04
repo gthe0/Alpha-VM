@@ -15,10 +15,7 @@
 
 extern unsigned pc;
 extern unsigned currLine;
-extern unsigned codeSize;
 extern unsigned executionFinished;
-
-#define AVM_ENDING_PC codeSize
 
 #define execute_add execute_arithmetic
 #define execute_sub execute_arithmetic

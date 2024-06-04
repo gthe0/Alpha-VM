@@ -9,7 +9,7 @@
 
 /* Array to store the Instructions */
 Instruction_T code = (Instruction_T)0;
-unsigned total_instructions = 0;
+unsigned codeSize = 0;
 
 /* Array to store user functions */
 UserFunc_T userFuncs = (UserFunc_T)0;
@@ -138,8 +138,8 @@ void alpha_bin_reader(char* ist_name)
 	}
 
 	/* Read Instructions */
-	fread(total_instructions,sizeof(unsigned),1,ost);
-	fread(code,sizeof(instruction),total_instructions,ost);
+	fread(codeSize,sizeof(unsigned),1,ost);
+	fread(code,sizeof(instruction),codeSize,ost);
 
 	fclose(ost);
 	return;
