@@ -1,7 +1,7 @@
 /*
  	Authors: csd4881, csd4988, csd5038														
 	
-	avm-lib.c									
+	avm-lib.c
 
 	Implementation of the library functions.
 */
@@ -285,7 +285,6 @@ void execute_lib_func(char* id)
 {
 	for (int i = 0; i < NO_OF_LIBFUNCTS; i++)
 	{
-		printf("%u %s\n",i,id);
 		if(!strcmp(id,lib_map[i].id))
 		{
 			library_func_t func = lib_map[i].func;	

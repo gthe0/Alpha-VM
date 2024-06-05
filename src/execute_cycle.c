@@ -82,7 +82,8 @@ void execute_cycle (void) {
 		 
 		/* Check if the opcode is valid */
         assert(instr->opcode >= 0 && instr->opcode <= nop_v);
-		printf("intruction number %u\n",pc);
+		
+		/*printf("intruction number %u\n",pc);*/
 
         if (instr->srcLine)
             currLine = instr->srcLine;

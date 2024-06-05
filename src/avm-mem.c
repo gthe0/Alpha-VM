@@ -226,7 +226,7 @@ avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
 		case bool_a:
 		{
 			reg->type = bool_m;
-			reg->data.numVal = arg->val;
+			reg->data.boolVal = arg->val;
 			return reg;
 		}
 
@@ -299,40 +299,4 @@ avm_memcell* avm_getactual(unsigned i)
 {
 	assert( i < avm_total_actuals());
 	return &stack[topsp + AVM_STACKENV_SIZE + 1 + i ];
-}
-
-#define HASH_MULTIPLIER 65599
-
-/* Number hash, used for table, boolean and number indexes*/
-static unsigned number_hash(unsigned num)
-{
-	return (num % AVM_TABLE_HASH_SIZE);
-}
-
-/* String hash, used for libfuncs, userfuncs and string*/
-static unsigned string_hash(char* name)
-{
-    unsigned int ui;
-    unsigned int uiHash = 0U;
-
-    for (ui = 0U; name[ui] != '\0'; ui++)
-        uiHash = uiHash * HASH_MULTIPLIER + name[ui];
-
-    return (uiHash % AVM_TABLE_HASH_SIZE);
-}
-
-avm_memcell* avm_tablegetelem (
-	avm_table* table,
-	avm_memcell* index)
-{
-	assert(table && index);
-	return NULL;
-}
-
-void avm_tablesetelem (
-	avm_table* table,
-	avm_memcell* index,
-	avm_memcell* content)
-{
-	return ;
 }
