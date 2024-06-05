@@ -104,7 +104,7 @@ static avm_memcell* str_bucket_get(
 	*/
 	while (
 		strIndexed &&
-		!strcmp(strIndexed->key.data.strVal,index->data.strVal))
+		strcmp(strIndexed->key.data.strVal,index->data.strVal))
 		strIndexed = strIndexed->next;
 
 	if (!strIndexed)
@@ -298,14 +298,14 @@ static void str_bucket_set(
 
 		return;
 	}
-
 	/* Numbers may be in a list.
 	*/
 	while (
 		strIndexed &&
-		!strcmp(strIndexed->key.data.strVal,index->data.strVal)&&
+		strcmp(strIndexed->key.data.strVal,index->data.strVal)&&
 		strIndexed->next)
 		strIndexed = strIndexed->next;
+
 
 	/* If we reach the end, do not execute this block*/
 	if (!strcmp(strIndexed->key.data.strVal,index->data.strVal))
@@ -491,7 +491,7 @@ void avm_tablesetelem (
 	if(content->type == table_m)
 		avm_table_inc_refcounter(content->data.tableVal);
 
-	if(f) return (*f)(table,index,content);
+	if(f) (*f)(table,index,content);
 	else 
 		avm_log(ERROR,"%s cannot be used for indexing",typeString[index->type]);
 
