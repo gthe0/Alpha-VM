@@ -92,7 +92,7 @@ static void libfunc_argument(void)
 	{
 		avm_memcell* arg = avm_getactual(0);
 
-		assert(arg->type == number_m && arg->data.numVal);
+		assert(arg->type == number_m);
 		avm_mem_cell_clear(&retval);
 
 		arg = &stack[p_topsp + AVM_STACKENV_SIZE  + 1 + (unsigned)arg->data.numVal];
