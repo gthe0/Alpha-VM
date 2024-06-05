@@ -10,26 +10,32 @@
 #include <assert.h>
 
 /* Typedefs of call expressions */
-typedef void (*call_expressions) (avm_memcell*);
+typedef void (*call_expressions) (avm_memcell*,Instruction_T);
 
 /* Implementation of the call functions */
-void call_string(avm_memcell* m)
+void call_string(avm_memcell* m,Instruction_T instr)
 {
 	assert(m && m->type == string_m);
 
     avm_call_saveenvironment();
 	execute_lib_func(m->data.strVal);
+
+	if(!executionFinished)
+		execute_funcexit(instr);
 }
 
-void call_library(avm_memcell* m)
+void call_library(avm_memcell* m,Instruction_T instr)
 {
 	assert(m && m->type == libfunc_m);
-	
+
     avm_call_saveenvironment();
 	execute_lib_func(get_libFuncs(m->data.libfuncVal));
+
+	if(!executionFinished)
+		execute_funcexit(instr);
 }
 
-void call_userFuncs(avm_memcell* m)
+void call_userFuncs(avm_memcell* m,Instruction_T instr)
 {
 	assert(m && m->type == userfunc_m);
 
@@ -39,7 +45,7 @@ void call_userFuncs(avm_memcell* m)
 	assert( pc < AVM_ENDING_PC);
 }
 
-void call_functor(avm_memcell* m)
+void call_functor(avm_memcell* m,Instruction_T instr)
 {
 	return;
 }
@@ -66,7 +72,7 @@ void execute_call(Instruction_T instr)
 
 	if (!f)
 		avm_log(ERROR,"Cannot call a '%s'\n",typeString[call_expr->type]);
-	else (*f)(call_expr);	
+	else (*f)(call_expr,instr);	
 
 	return ;
 }

@@ -181,10 +181,6 @@ void avm_assign(avm_memcell* lv, avm_memcell* rv)
 		 lv->data.tableVal == rv->data.tableVal)	
 		return;
 	
-	/* If the type is undef, then terminate with error*/
-	if (rv->type == undef_m)
-		avm_log(ERROR,"rv in undef\n");
-
 	/* Clear the old cell to replace it with the rv*/
 	avm_mem_cell_clear(lv);		
 	memcpy(lv,rv,sizeof(avm_memcell));
