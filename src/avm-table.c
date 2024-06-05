@@ -196,6 +196,10 @@ static void bool_bucket_set(
 	if(boolIndexed)
 	{
 		boolIndexed->value = *content;
+
+		if(content->type == string_m)
+			boolIndexed->value.data.strVal = strdup(content->data.strVal);
+
 	}
 	else
 	{
@@ -222,8 +226,50 @@ static void number_bucket_set(
 
 	int hash = number_hash(index->data.numVal);
 	avm_table_bucket	*numIndexed = table->numIndexed[hash];
-	avm_table_bucket	*prev = NULL;
+	avm_table_bucket	*node = NULL;
 
+	if(!numIndexed)
+	{
+		table->numIndexed[hash] = malloc(sizeof(avm_table_bucket));
+		table->numIndexed[hash]->key = *index;
+		table->numIndexed[hash]->value = *content;
+
+		if (content->type == string_m)
+			table->numIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
+
+		return;
+	}
+
+	/* Numbers may be in a list.
+	*/
+	while (
+		numIndexed &&
+		numIndexed->key.data.numVal != index->data.numVal &&
+		numIndexed->next)
+		numIndexed = numIndexed->next;
+
+	/* If we reach the end, do not execute this block*/
+	if (numIndexed->key.data.numVal != index->data.numVal)
+	{
+		numIndexed->value = *content;
+
+		if(content->type == string_m)
+			numIndexed->value.data.strVal = strdup(content->data.strVal);
+		
+		return;
+	}
+
+	node = malloc(sizeof(avm_table_bucket));	
+	node->next = NULL;
+	node->key = *index;
+	node->value = *content;
+
+	if (content->type == string_m)
+		node->value.data.strVal = strdup(content->data.strVal);	
+
+	numIndexed->next = node;
+
+	return;	
 }
 
 
@@ -238,6 +284,53 @@ static void str_bucket_set(
 
 	int hash = string_hash(index->data.strVal);
 	avm_table_bucket* strIndexed = table->strIndexed[hash];
+	avm_table_bucket	*node = NULL;
+
+	if(!strIndexed)
+	{
+		table->strIndexed[hash] = malloc(sizeof(avm_table_bucket));
+		table->strIndexed[hash]->key = *index;
+		table->strIndexed[hash]->key.data.strVal = strdup(index->data.strVal);
+		table->strIndexed[hash]->value = *content;
+
+		if (content->type == string_m)
+			table->strIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
+
+		return;
+	}
+
+	/* Numbers may be in a list.
+	*/
+	while (
+		strIndexed &&
+		!strcmp(strIndexed->key.data.strVal,index->data.strVal)&&
+		strIndexed->next)
+		strIndexed = strIndexed->next;
+
+	/* If we reach the end, do not execute this block*/
+	if (!strcmp(strIndexed->key.data.strVal,index->data.strVal))
+	{
+		strIndexed->value = *content;
+
+		if(content->type == string_m)
+			strIndexed->value.data.strVal = strdup(content->data.strVal);
+		
+		return;
+	}
+
+	node = malloc(sizeof(avm_table_bucket));	
+	node->next = NULL;
+	node->key = *index;
+	node->key.data.strVal = strdup(index->data.strVal);
+	node->value = *content;
+
+	if (content->type == string_m)
+		node->value.data.strVal = strdup(content->data.strVal);	
+
+	strIndexed->next = node;
+
+	return;	
+	
 }
 
 
@@ -252,6 +345,50 @@ static void lib_bucket_set(
 
 	int hash = string_hash(get_libFuncs(index->data.libfuncVal));
 	avm_table_bucket* libIndexed = table->libIndexed[hash];
+	avm_table_bucket	*node = NULL;
+
+	if(!libIndexed)
+	{
+		table->libIndexed[hash] = malloc(sizeof(avm_table_bucket));
+		table->libIndexed[hash]->key = *index;
+		table->libIndexed[hash]->value = *content;
+
+		if (content->type == string_m)
+			table->libIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
+
+		return;
+	}
+
+	/* Numbers may be in a list.
+	*/
+	while (
+		libIndexed &&
+		libIndexed->key.data.libfuncVal != index->data.libfuncVal &&
+		libIndexed->next)
+		libIndexed = libIndexed->next;
+
+	/* If we reach the end, do not execute this block*/
+	if (libIndexed->key.data.libfuncVal != index->data.libfuncVal)
+	{
+		libIndexed->value = *content;
+
+		if(content->type == string_m)
+			libIndexed->value.data.strVal = strdup(content->data.strVal);
+		
+		return;
+	}
+
+	node = malloc(sizeof(avm_table_bucket));	
+	node->next = NULL;
+	node->key = *index;
+	node->value = *content;
+
+	if (content->type == string_m)
+		node->value.data.strVal = strdup(content->data.strVal);	
+
+	libIndexed->next = node;
+
+	return;	
 
 }
 
@@ -266,6 +403,50 @@ static void userfunc_bucket_set(
 
 	int hash = number_hash(index->data.funcVal);
 	avm_table_bucket* userIndexed = table->userIndexed[hash];
+	avm_table_bucket	*node = NULL;
+
+	if(!userIndexed)
+	{
+		table->userIndexed[hash] = malloc(sizeof(avm_table_bucket));
+		table->userIndexed[hash]->key = *index;
+		table->userIndexed[hash]->value = *content;
+
+		if (content->type == string_m)
+			table->userIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
+
+		return;
+	}
+
+	/* Numbers may be in a list.
+	*/
+	while (
+		userIndexed &&
+		userIndexed->key.data.funcVal != index->data.funcVal &&
+		userIndexed->next)
+		userIndexed = userIndexed->next;
+
+	/* If we reach the end, do not execute this block*/
+	if (userIndexed->key.data.funcVal != index->data.funcVal)
+	{
+		userIndexed->value = *content;
+
+		if(content->type == string_m)
+			userIndexed->value.data.strVal = strdup(content->data.strVal);
+		
+		return;
+	}
+
+	node = malloc(sizeof(avm_table_bucket));	
+	node->next = NULL;
+	node->key = *index;
+	node->value = *content;
+
+	if (content->type == string_m)
+		node->value.data.strVal = strdup(content->data.strVal);	
+
+	userIndexed->next = node;
+
+	return;	
 }
 
 
@@ -305,7 +486,10 @@ void avm_tablesetelem (
 {
 	assert(table && index && content);
 
-	table_setter_t f = table_get[index->type];
+	table_setter_t f = table_set[index->type];
+
+	if(content->type == table_m)
+		avm_table_inc_refcounter(content->data.tableVal);
 
 	if(f) return (*f)(table,index,content);
 	else 
