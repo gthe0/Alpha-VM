@@ -11,6 +11,7 @@
 #include <avm-reader.h>
 #include <dispatcher.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 
 int main(int argc, char** argv)
@@ -22,10 +23,13 @@ int main(int argc, char** argv)
 	}
 
 	alpha_bin_reader(argv[1]);
+	print_tcg_arrays(stdout);
+
 	avm_initialize();
 
-	while (!executionFinished)
+	while (!executionFinished){
 		execute_cycle();
+	}
 
 	return EXIT_SUCCESS;
 }

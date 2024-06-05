@@ -24,7 +24,7 @@ void call_string(avm_memcell* m)
 void call_library(avm_memcell* m)
 {
 	assert(m && m->type == libfunc_m);
-
+	
     avm_call_saveenvironment();
 	execute_lib_func(get_libFuncs(m->data.libfuncVal));
 }
@@ -61,12 +61,11 @@ void execute_call(Instruction_T instr)
 {
 	avm_memcell* call_expr = avm_translate_operand(&(instr->arg1),&cx);
 	assert(call_expr);
-
+	
 	call_expressions f = callFuncs[call_expr->type];
+
 	if (!f)
-	{
 		avm_log(ERROR,"Cannot call a '%s'\n",typeString[call_expr->type]);
-	}
 	else (*f)(call_expr);	
 
 	return ;

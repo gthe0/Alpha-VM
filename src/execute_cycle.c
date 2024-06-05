@@ -79,18 +79,16 @@ void execute_cycle (void) {
         assert(pc < AVM_ENDING_PC);
     
 	    Instruction_T instr = code + pc;
-		printf("%d ",(int)instr->opcode);
 		 
 		/* Check if the opcode is valid */
         assert(instr->opcode >= 0 && instr->opcode <= nop_v);
+		printf("intruction number %u\n",pc);
 
         if (instr->srcLine)
             currLine = instr->srcLine;
 
-		printf("%u\n",currLine);
-
         unsigned oldPC = pc;
-
+		
         (*executeFuncs[instr->opcode])(instr);
 
         if (pc == oldPC)

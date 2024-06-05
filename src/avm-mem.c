@@ -75,8 +75,8 @@ void avm_initstack(void)
 void avm_initialize (void)
 {
 	avm_initstack();
-	
-	top = topsp = AVM_STACKSIZE - 1;
+	top = AVM_STACKSIZE - programVarOffset -1;
+	topsp = 0;
 	ax.type = bx.type = cx.type = retval.type = undef_m;
 
 	return ;
@@ -180,6 +180,10 @@ void avm_assign(avm_memcell* lv, avm_memcell* rv)
 		 rv->type == table_m &&
 		 lv->data.tableVal == rv->data.tableVal)	
 		return;
+	
+	/* If the type is undef, then terminate with error*/
+	if (rv->type == undef_m)
+		avm_log(ERROR,"rv in undef\n");
 
 	/* Clear the old cell to replace it with the rv*/
 	avm_mem_cell_clear(lv);		
@@ -201,7 +205,6 @@ void avm_assign(avm_memcell* lv, avm_memcell* rv)
 avm_memcell* avm_translate_operand(vmarg_T arg, avm_memcell* reg)
 {
 	assert(arg);
-
 	switch (arg->type)
 	{
 		case global_a:	return &stack[AVM_STACKSIZE-arg->val-1];

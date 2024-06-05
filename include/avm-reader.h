@@ -11,10 +11,12 @@
 #define AVM_READER_H
 
 #include <avm-types.h>
+#include <stdio.h>
 
 /* The extracted instructions... */
 extern Instruction_T code;
 extern unsigned codeSize;
+extern unsigned programVarOffset;
 
 #define AVM_ENDING_PC codeSize
 
@@ -30,5 +32,9 @@ char* get_libFuncs(unsigned int i);
 * @param ist_name Input Stream name aka. the alpha binary file name
 */
 void alpha_bin_reader(char* ist_name);
+
+/* Print Instructions
+*/
+void print_tcg_arrays(FILE *ost);
 
 #endif /* Library used to read Alpha binary files*/

@@ -47,7 +47,6 @@ by turning them to string first */
 static void libfunc_print(void)
 {
 	unsigned n = avm_total_actuals();
-
 	for (unsigned i = 0; i < n; i++)
 	{
 		char* s = avm_to_string(avm_getactual(i));
@@ -286,6 +285,7 @@ void execute_lib_func(char* id)
 {
 	for (int i = 0; i < NO_OF_LIBFUNCTS; i++)
 	{
+		printf("%u %s\n",i,id);
 		if(!strcmp(id,lib_map[i].id))
 		{
 			library_func_t func = lib_map[i].func;	
@@ -294,6 +294,8 @@ void execute_lib_func(char* id)
 			totalActuals = 0;
 
 			(*func)();
+
+			return;
 		}
 	}
 	

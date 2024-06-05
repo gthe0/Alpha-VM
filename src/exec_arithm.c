@@ -2,6 +2,7 @@
 #include <avm-mem.h>
 #include <avm-log.h>
 
+#include <stdio.h>
 #include <assert.h>
 
 typedef double (*arithmetic_func_t)	(double x, double y);
@@ -28,8 +29,8 @@ void execute_arithmetic(Instruction_T instr)
 	avm_memcell* lv = avm_translate_operand(&instr->result, (avm_memcell*)0);
 	avm_memcell* rv1 = avm_translate_operand(&instr->arg1, &ax);
 	avm_memcell* rv2 = avm_translate_operand(&instr->arg2, &bx);
-
-	assert(lv && (&stack[0] < lv && &stack[top] >= lv || lv == &retval));
+	
+	assert(lv && (&stack[AVM_STACKSIZE - 1 ] >= lv  && lv>&stack[top] || lv == &retval));
 	assert(rv1 && rv2);
 
 	if(rv1->type != number_m || rv2->type != number_m)
@@ -54,9 +55,9 @@ void execute_assign(Instruction_T instr)
 	avm_memcell* lv = avm_translate_operand(&instr->result, (avm_memcell*)0);
 	avm_memcell* rv = avm_translate_operand(&instr->arg1, &ax);
 
-	assert(lv && (&stack[0] < lv && &stack[top] >= lv || lv == &retval));
+	assert(lv && (&stack[AVM_STACKSIZE - 1 ] >= lv  && lv>&stack[top] || lv == &retval));
 	assert(rv);
-	
+
 	avm_assign(lv,rv);
 
 	return;
