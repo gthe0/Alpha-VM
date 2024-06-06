@@ -50,7 +50,7 @@ static void libfunc_print(void)
 	for (unsigned i = 0; i < n; i++)
 	{
 		char* s = avm_to_string(avm_getactual(i));
-		puts(s);
+		printf(s);
 		free(s);
 	}
 }
