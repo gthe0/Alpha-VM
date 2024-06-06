@@ -45,6 +45,15 @@ static void memclear_table(avm_memcell* m)
 	avm_table_dec_refcounter(m->data.tableVal);
 }
 
+/**
+* @brief Used to shallow copy memcells
+* @param m The memcell to be copied...
+*/
+static avm_memcell* avm_memcell_copy(avm_memcell* m)
+{
+	return NULL;
+}
+
 /*
  Function table used to call the correct memclear
  function based on the memcell type
@@ -340,8 +349,16 @@ char* avm_bucket_tostring(
 	
 	while (bucket)
 	{
-		index = avm_to_string(&bucket->key);
-		value = avm_to_string(&bucket->value);
+		/* We do these checks to not get stuck in 
+			a string producing loop...
+		*/
+		if (bucket->key.type == table_m && bucket->key.data.tableVal == table )
+		 	 index = strdup("__SELF__");
+		else index = avm_to_string(&bucket->key);
+
+		if (bucket->value.type == table_m && bucket->value.data.tableVal == table )
+			 value = strdup("__SELF__");
+		else value = avm_to_string(&bucket->value);
 
 		/* The +6 is because we allocate memory also for { , }'\0'*/
 		string = malloc(strlen(index) + strlen(value) + 9);
@@ -377,4 +394,27 @@ char* avm_bucket_tostring(
 
 	free(bucket_str);
 	return string;
+}
+
+avm_table* avm_table_copy(avm_memcell* table)
+{
+	assert(table && table->type == table_m);
+
+	/* Create the new table */
+	avm_table* oldtable = table->data.tableVal;
+	avm_table* newtable = avm_table_new();
+
+	return newtable;	
+}
+
+
+avm_table* avm_table_getkeys(avm_memcell* table)
+{
+	assert(table && table->type == table_m);
+
+	/* Create the new table */
+	avm_table* oldtable = table->data.tableVal;
+	avm_table* newtable = avm_table_new();
+
+	return newtable;	
 }

@@ -221,4 +221,7 @@ char* avm_bucket_tostring(
 	avm_table* table,
 	avm_table_bucket* bucket);
 
+avm_table* avm_table_copy(avm_memcell* table);
+avm_table* avm_table_getkeys(avm_memcell* table);
+
 #endif /* avm module */

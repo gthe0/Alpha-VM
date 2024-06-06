@@ -233,12 +233,16 @@ char* avm_to_string(avm_memcell* m)
 	return	(*Stringify_cell[m->type])(m);
 }
 
+/* Function used to check 
+if an input is a number to call atof
+*/
 int is_num(char* input)
 {
 	assert(input);
 	
 	int str_size = strlen(input);
 
+	/*If the string is "" then return*/
 	if(!str_size)	return 0;
 
 	int has_dot = 0;
@@ -248,22 +252,26 @@ int is_num(char* input)
 
 	if(is_neg)
 	{
+		/*If the string starts with '-'
+		and its size is 1 then return... */	
 		if(str_size == 1)	return 0;
 
+		/*...else increment pointer by 1, 
+		to check the rest of the nums*/
 		input++;
 	}
 
 	char c  = 0;
 
-	while (input != '\0')
+	while ((c = *input) != '\0')
 	{
-		c = *input;
-
 		if(c < '0' || c > '9' || (c =='.' && !has_dot++))
 			return 0;
 
 		input++;		
 	}
 
+	/* If we did not return thus far, 
+	then the input is a number, return 1*/
 	return 1;
 }

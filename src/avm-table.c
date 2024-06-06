@@ -483,7 +483,7 @@ avm_memcell* avm_tablegetelem (
 
 	if(f) return (*f)(table,index);
 	else 
-		avm_log(ERROR,"%s cannot be used for indexing",typeString[index->type]);
+		avm_log(ERROR,"%s cannot be used for indexing\n",typeString[index->type]);
 
 	return NULL;
 }
@@ -515,7 +515,7 @@ void avm_tablesetelem (
 
 	if(f) t = (*f)(table,index,content);
 	else 
-		avm_log(ERROR,"%s cannot be used for indexing",typeString[index->type]);
+		avm_log(ERROR,"%s cannot be used for indexing\n",typeString[index->type]);
 
 	/*
 	 If t is zero, that means that 
