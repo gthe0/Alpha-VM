@@ -152,7 +152,7 @@ void avm_table_buckets_destroy(avm_table_bucket** p)
 			free(del);
 		}
 
-		p[i] = NULL ;
+		*p = NULL ;
 	}
 }
 
@@ -322,9 +322,11 @@ char* avm_bucket_tostring(
 	char* index = NULL;
 	char* value = NULL;
 
-	int total = 0, curr = 0, final_size = 1;
+	int total = table->total, curr = 0, final_size = 1;
 
 	char** bucket_str = malloc(sizeof(char*)*total);
+	assert(bucket_str);
+
 	char* string = NULL;
 
 	/*
@@ -342,7 +344,7 @@ char* avm_bucket_tostring(
 		value = avm_to_string(&bucket->value);
 
 		/* The +6 is because we allocate memory also for { , }'\0'*/
-		string = malloc(strlen(index) + strlen(value) + 8);
+		string = malloc(strlen(index) + strlen(value) + 9);
 		sprintf(string,"{%s : %s}",index,value);
 
 		bucket_str[curr++] = string;
@@ -354,10 +356,10 @@ char* avm_bucket_tostring(
 	}
 
 	/* Now we just need to concantinate the strings... */
-	string = malloc((final_size + curr - 1)*sizeof(char));
+	string = malloc((final_size + curr)*sizeof(char));
 	assert(string);
 
-	for (int i = 0; i < final_size + curr - 1; i++)
+	for (int i = 0; i < final_size + curr ; i++)
 	{
 		string[i] = '\0'; 
 	}
