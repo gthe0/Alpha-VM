@@ -8,6 +8,7 @@
 
 #include <avm-mem.h>
 #include <avm-log.h>
+#include <avm-utils.h>
 #include <avm-reader.h>
 #include <dispatcher.h>
 
@@ -299,4 +300,79 @@ avm_memcell* avm_getactual(unsigned i)
 {
 	assert( i < avm_total_actuals());
 	return &stack[topsp + AVM_STACKENV_SIZE + 1 + i ];
+}
+
+char* avm_bucket_tostring(
+	avm_table* table,
+	avm_table_bucket* bucket)
+{
+	assert(table);
+
+	/*
+	 If the bucket list is empty, 
+	 return NULL (flag for do nothing)
+	*/
+	if(bucket == NULL)
+		return NULL;
+
+	/* We do not know how many strings are stored in a bucket,
+	 so for safety reasons, we ll allocate a number of 'total' 
+	 strings in the array and we will follow the same strategy 
+	 that we applied to table_to_string */
+	char* index = NULL;
+	char* value = NULL;
+
+	int total = 0, curr = 0, final_size = 1;
+
+	char** bucket_str = malloc(sizeof(char*)*total);
+	char* string = NULL;
+
+	/*
+	 We initialize the array with NULLs
+	 Get rid of the garbage...
+	*/
+	for (int i = 0; i < total ; i++)
+	{
+		bucket_str[i] = NULL;
+	}
+	
+	while (bucket)
+	{
+		index = avm_to_string(&bucket->key);
+		value = avm_to_string(&bucket->value);
+
+		/* The +6 is because we allocate memory also for { , }'\0'*/
+		string = malloc(strlen(index) + strlen(value) + 8);
+		sprintf(string,"{%s : %s}",index,value);
+
+		bucket_str[curr++] = string;
+		
+		final_size += strlen(string); 
+
+		bucket = bucket->next;
+		string = index = value = NULL;
+	}
+
+	/* Now we just need to concantinate the strings... */
+	string = malloc((final_size + curr - 1)*sizeof(char));
+	assert(string);
+
+	for (int i = 0; i < final_size + curr - 1; i++)
+	{
+		string[i] = '\0'; 
+	}
+
+	/*We ll use a strcat */
+	for (int i = 0; i < curr; i++)
+	{
+		strcat(string,bucket_str[i]);
+
+		strcat(string,",");
+
+		/* After concantinating them, free them*/
+		free(bucket_str[i]);
+	}
+
+	free(bucket_str);
+	return string;
 }

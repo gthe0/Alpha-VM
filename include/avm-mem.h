@@ -217,4 +217,8 @@ void avm_tablesetelem (
 	avm_memcell* index,
 	avm_memcell* content);
 
+char* avm_bucket_tostring(
+	avm_table* table,
+	avm_table_bucket* bucket);
+
 #endif /* avm module */

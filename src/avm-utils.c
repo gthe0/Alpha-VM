@@ -46,15 +46,128 @@ static char* userfunc_to_string(avm_memcell* m)
 	return strdup(get_UserFunc(m->data.funcVal).id);
 } 
 
-/*
- We won't print the whole damn array for an error message.
- Just the name of the table shall suffice 
-*/
+/* We ll print the whole table */
 static char* table_to_string(avm_memcell* m)
 {
 	assert(m && m->type == table_m);
 
-	return strdup("_table_");
+	int total = 0,
+		curr = 0,
+		final_str_len = 3; /*Because it contains surely []\0*/
+
+	avm_table* table = m->data.tableVal;
+
+	if (!(total = table->total))
+		return strdup("[]");	
+	
+	/* If the table is not empty, 
+	make a string for each of its elements 
+	and store them in an array of strings...
+	We are not compiling for c99, so we can have
+	dynamically sized arrays, but for the shake of
+	backwards compatibility, we will allocate the memory...
+	*/
+	char** table_str = malloc(sizeof(char*)*total);
+	char* string = NULL;
+
+	/*
+	 We initialize the array with NULLs
+	 Get rid of the garbage...
+	*/
+	for (int i = 0; i < total ; i++)
+	{
+		table_str[i] = NULL;
+	}
+
+	/*
+	 for each type of bucket, make a string and return it.
+	 If the string returned in not NULL, then add its length
+	 to the final string length
+	*/
+	for (int i = 0; i < 2 ; i++)
+	{
+		string = avm_bucket_tostring(table,table->boolIndexed[i]);
+
+		if(string)
+		{
+			table_str[curr++] = string ;		
+			final_str_len += strlen(string);
+		}
+	}
+
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE ; i++)
+	{
+		string = avm_bucket_tostring(table,table->numIndexed[i]);
+
+		if(string)
+		{
+			table_str[curr++] = string ;		
+			final_str_len += strlen(string);
+		}
+	}
+
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE ; i++)
+	{
+		string = avm_bucket_tostring(table,table->strIndexed[i]);
+
+		if(string)
+		{
+			table_str[curr++] = string ;		
+			final_str_len += strlen(string);
+		}
+	}
+
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE ; i++)
+	{
+		string = avm_bucket_tostring(table,table->userIndexed[i]);
+
+		if(string)
+		{
+			table_str[curr++] = string ;		
+			final_str_len += strlen(string);
+		}		
+	}
+
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE ; i++)
+	{
+		string = avm_bucket_tostring(table,table->libIndexed[i]);
+
+		if(string)
+		{
+			table_str[curr++] = string ;		
+			final_str_len += strlen(string);
+		}
+	}
+
+	/* Now we just need to concantinate the strings... */
+	string = malloc(final_str_len*sizeof(char));
+	assert(string);
+
+
+	for (int i = 0; i < final_str_len; i++)
+	{
+		string[i] = '\0'; 
+	}
+
+	/*Start of the array */
+	*string = '[';
+
+	/*We ll use a strcat */
+	for (int i = 0; i < total; i++)
+	{
+		strcat(string,table_str[i]);
+
+		/* After concantinating them, free them*/
+		free(table_str[i]);
+	}
+	
+	/* Delete last comma */
+	string[strlen(string) - 1] = '\0'; 
+	strcat(string,"]");
+
+	free(table_str);
+
+	return string;
 }
 
 /*
@@ -116,6 +229,6 @@ static to_string_Funcs Stringify_cell[] = {
 char* avm_to_string(avm_memcell* m)
 {
 	assert(m && m->type >= 0 && m->type <= undef_m );
-
+	
 	return	(*Stringify_cell[m->type])(m);
 }

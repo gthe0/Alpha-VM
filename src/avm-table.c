@@ -209,6 +209,7 @@ static int bool_bucket_set(
 		table->boolIndexed[index->data.boolVal] = malloc(sizeof(avm_table_bucket));
 		table->boolIndexed[index->data.boolVal]->key = *index;
 		table->boolIndexed[index->data.boolVal]->value = *content;
+		table->boolIndexed[index->data.boolVal]->next = NULL;
 
 		if (content->type == string_m)
 			table->boolIndexed[index->data.boolVal]->value.data.strVal = strdup(content->data.strVal);	
@@ -227,7 +228,7 @@ static int number_bucket_set(
 	avm_memcell* content
 )
 {
-	assert(index->type == number_m);	
+	assert(index->type == number_m);
 
 	int hash = number_hash(index->data.numVal);
 	avm_table_bucket	*numIndexed = table->numIndexed[hash];
@@ -238,6 +239,7 @@ static int number_bucket_set(
 		table->numIndexed[hash] = malloc(sizeof(avm_table_bucket));
 		table->numIndexed[hash]->key = *index;
 		table->numIndexed[hash]->value = *content;
+		table->numIndexed[hash]->next = NULL;
 
 		if (content->type == string_m)
 			table->numIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
@@ -297,6 +299,7 @@ static int str_bucket_set(
 		table->strIndexed[hash]->key = *index;
 		table->strIndexed[hash]->key.data.strVal = strdup(index->data.strVal);
 		table->strIndexed[hash]->value = *content;
+		table->strIndexed[hash]->next = NULL;
 
 		if (content->type == string_m)
 			table->strIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
@@ -357,6 +360,7 @@ static int lib_bucket_set(
 		table->libIndexed[hash] = malloc(sizeof(avm_table_bucket));
 		table->libIndexed[hash]->key = *index;
 		table->libIndexed[hash]->value = *content;
+		table->libIndexed[hash]->next = NULL;
 
 		if (content->type == string_m)
 			table->libIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
@@ -415,6 +419,7 @@ static int userfunc_bucket_set(
 		table->userIndexed[hash] = malloc(sizeof(avm_table_bucket));
 		table->userIndexed[hash]->key = *index;
 		table->userIndexed[hash]->value = *content;
+		table->userIndexed[hash]->next= NULL;
 
 		if (content->type == string_m)
 			table->userIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
@@ -495,7 +500,18 @@ void avm_tablesetelem (
 	table_setter_t f = table_set[index->type];
 
 	if(content->type == table_m)
+	{
+		/* I define that it is illegal to recurcively 
+		set the table itself as its elements, is illegal */
+		if (content->data.tableVal == table)
+		{
+			avm_log(ERROR,"Setting the table itself as an element"
+						" of the table is illegal\n");
+
+			return ;
+		}
 		avm_table_inc_refcounter(content->data.tableVal);
+	}
 
 	if(f) t = (*f)(table,index,content);
 	else 
