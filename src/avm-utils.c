@@ -140,11 +140,11 @@ static char* table_to_string(avm_memcell* m)
 	}
 
 	/* Now we just need to concantinate the strings... */
-	string = malloc(final_str_len*sizeof(char));
+	string = malloc(final_str_len*sizeof(char)+1);
 	assert(string);
 
 
-	for (int i = 0; i < final_str_len; i++)
+	for (int i = 0; i < final_str_len+1; i++)
 	{
 		string[i] = '\0'; 
 	}

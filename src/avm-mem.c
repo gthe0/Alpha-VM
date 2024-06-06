@@ -45,15 +45,6 @@ static void memclear_table(avm_memcell* m)
 	avm_table_dec_refcounter(m->data.tableVal);
 }
 
-/**
-* @brief Used to shallow copy memcells
-* @param m The memcell to be copied...
-*/
-static avm_memcell* avm_memcell_copy(avm_memcell* m)
-{
-	return NULL;
-}
-
 /*
  Function table used to call the correct memclear
  function based on the memcell type
@@ -396,6 +387,96 @@ char* avm_bucket_tostring(
 	return string;
 }
 
+avm_table* avm_table_getkeys(avm_memcell* table)
+{
+	assert(table && table->type == table_m);
+
+	/* Create the new table */
+	avm_table* oldtable = table->data.tableVal;
+	avm_table* newtable = avm_table_new();
+	
+	avm_table_bucket* t_curr = NULL;
+
+	int counter_index = 0;
+
+	/* Copy all the buckets of each bucket array*/
+	for (int i = 0; i < 2; i++)
+	{
+		t_curr = oldtable->boolIndexed[i]; 
+
+		while (t_curr){
+
+			avm_memcell* new_index = malloc(sizeof(avm_memcell));
+			new_index->type = number_m;
+			new_index->data.numVal = counter_index++;
+
+			avm_tablesetelem(newtable,new_index,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
+
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->numIndexed[i]; 
+
+		while (t_curr){
+
+			avm_memcell* new_index = malloc(sizeof(avm_memcell));
+			new_index->type = number_m;
+			new_index->data.numVal = counter_index++;
+
+			avm_tablesetelem(newtable,new_index,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
+
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->strIndexed[i]; 
+
+		while (t_curr){
+
+			avm_memcell* new_index = malloc(sizeof(avm_memcell));
+			new_index->type = number_m;
+			new_index->data.numVal = counter_index++;
+
+			avm_tablesetelem(newtable,new_index,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}	
+	
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->userIndexed[i]; 
+
+		while (t_curr){
+
+			avm_memcell* new_index = malloc(sizeof(avm_memcell));
+			new_index->type = number_m;
+			new_index->data.numVal = counter_index++;
+
+			avm_tablesetelem(newtable,new_index,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
+	
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->libIndexed[i]; 
+		while (t_curr){
+
+			avm_memcell* new_index = malloc(sizeof(avm_memcell));
+			new_index->type = number_m;
+			new_index->data.numVal = counter_index++;
+
+			avm_tablesetelem(newtable,new_index,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
+
+	return newtable;	
+}
+
 avm_table* avm_table_copy(avm_memcell* table)
 {
 	assert(table && table->type == table_m);
@@ -404,17 +485,57 @@ avm_table* avm_table_copy(avm_memcell* table)
 	avm_table* oldtable = table->data.tableVal;
 	avm_table* newtable = avm_table_new();
 
-	return newtable;	
-}
+	avm_table_bucket* t_curr = NULL;
+	/* Copy all the buckets of each bucket array*/
+	for (int i = 0; i < 2; i++)
+	{
+		t_curr = oldtable->boolIndexed[i]; 
 
+		while (t_curr){
+			avm_tablesetelem(newtable,&t_curr->key,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
 
-avm_table* avm_table_getkeys(avm_memcell* table)
-{
-	assert(table && table->type == table_m);
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->numIndexed[i]; 
 
-	/* Create the new table */
-	avm_table* oldtable = table->data.tableVal;
-	avm_table* newtable = avm_table_new();
+		while (t_curr){
+			avm_tablesetelem(newtable,&t_curr->key,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
+
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->strIndexed[i]; 
+
+		while (t_curr){
+			avm_tablesetelem(newtable,&t_curr->key,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}	
+	
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->userIndexed[i]; 
+
+		while (t_curr){
+			avm_tablesetelem(newtable,&t_curr->key,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
+	
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->libIndexed[i]; 
+
+		while (t_curr){
+			avm_tablesetelem(newtable,&t_curr->key,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
 
 	return newtable;	
 }
