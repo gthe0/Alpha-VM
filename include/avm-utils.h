@@ -22,4 +22,6 @@ extern char* typeString[];
 */
 char* avm_to_string(avm_memcell* m);
 
+int is_num(char* input);
+
 #endif /* avm utilities lib */

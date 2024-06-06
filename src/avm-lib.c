@@ -220,7 +220,27 @@ void libfunc_strtonum(void)
 /* Object related functions */
 static void libfunc_objectmemberkeys(void)
 {
+	/* Basically we want to create a new array that stores only the keys as its member...*/
+	unsigned n = avm_total_actuals();
 
+	if(n != 1)
+	{
+		avm_log(ERROR,"one argument (not %d) expected in 'objectmemberkeys'\n",n);
+	}
+	else
+	{		
+		avm_mem_cell_clear(&retval);
+		avm_memcell* table = avm_getactual(0);
+
+		if(table->type != table_m)
+		{
+			avm_log(ERROR,"Argument of 'objectmemberkeys' was not a table\n");
+			return;
+		}
+
+		retval.type = table_m;
+		retval.data.tableVal = avm_table_getkeys(table);
+	}
 }
 
 static void  libfunc_objecttotalmembers(void)
@@ -237,8 +257,6 @@ static void  libfunc_objecttotalmembers(void)
 		avm_mem_cell_clear(&retval);
 		avm_memcell* table = avm_getactual(0);
 
-		char* endptr;
-
 		if(table->type != table_m)
 		{
 			avm_log(ERROR,"Argument of 'objecttotalmembers' was not a table\n");
@@ -252,15 +270,88 @@ static void  libfunc_objecttotalmembers(void)
 
 static void libfunc_objectcopy(void)
 {
+	/* Basically we want to deep copy the array...*/
+	unsigned n = avm_total_actuals();
 
+	if(n != 1)
+	{
+		avm_log(ERROR,"one argument (not %d) expected in 'objectcopy'\n",n);
+	}
+	else
+	{
+		avm_mem_cell_clear(&retval);
+		avm_memcell* table = avm_getactual(0);
 
+		if(table->type != table_m)
+		{
+			avm_log(ERROR,"Argument of 'objectcopy' was not a table\n");
+			return;
+		}
+
+		retval.type = table_m;
+		retval.data.tableVal = avm_table_copy(table);
+	}
 }
+
+#define INPUT_SIZE(a)	0x100*a*sizeof(char)
 
 /* Input getter function */
 static void libfunc_input(void)
 {
+	unsigned n = avm_total_actuals();
 
+	if(n != 0)
+	{
+		avm_log(ERROR,"Input does not take arguments!\n");
+	}
+	else
+	{
+		int c = 0, len = 0;
+		int resize = 1;
+		char* input = malloc(INPUT_SIZE(resize));
 
+		while ((c = getchar()) != EOF && c != '\n')
+		{
+			input[len++] = c;
+
+			if(len >= INPUT_SIZE(resize))
+			{
+				input = realloc(input,INPUT_SIZE(++resize));
+				assert(input);
+			}
+		}
+		
+		/* NULL TERMINATE IT */
+		input[len++] = '\0';
+
+		if(!strcmp(input,"true"))
+		{
+			retval.type = bool_m;
+			retval.data.boolVal = 1;
+		}
+		else
+		if(!strcmp(input,"false"))
+		{
+			retval.type = bool_m;
+			retval.data.boolVal = 0;
+		}
+		else
+		if(!strcmp(input,"nil"))
+		{
+			retval.type = nil_m;
+		}
+		else
+		if(is_num(input))
+		{
+			retval.type = number_m;
+			retval.data.numVal = atof(input);
+		}
+		else
+		{
+			retval.type = string_m;
+			retval.data.strVal = input;
+		}
+	}
 }
 
 #define NO_OF_LIBFUNCTS 12
