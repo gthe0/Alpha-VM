@@ -394,6 +394,7 @@ avm_table* avm_table_getkeys(avm_memcell* table)
 	/* Create the new table */
 	avm_table* oldtable = table->data.tableVal;
 	avm_table* newtable = avm_table_new();
+	avm_table_inc_refcounter(newtable);
 	
 	avm_table_bucket* t_curr = NULL;
 
@@ -484,6 +485,7 @@ avm_table* avm_table_copy(avm_memcell* table)
 	/* Create the new table */
 	avm_table* oldtable = table->data.tableVal;
 	avm_table* newtable = avm_table_new();
+	avm_table_inc_refcounter(newtable);
 
 	avm_table_bucket* t_curr = NULL;
 	/* Copy all the buckets of each bucket array*/
