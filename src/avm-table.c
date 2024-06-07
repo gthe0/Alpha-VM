@@ -57,9 +57,9 @@ static avm_memcell* bool_bucket_get(
 	 so we search for them there
 	*/
 	if(boolIndexed)	return &boolIndexed->value;
-	else
-		avm_log(ERROR,"The element at index %s,"
-					" does not exist!\n",avm_to_string(index));
+
+	avm_log(ERROR,"The element at index %s,"
+			" does not exist!\n",avm_to_string(index));
 
 	return NULL;
 }
@@ -83,11 +83,12 @@ static avm_memcell* number_bucket_get(
 		numIndexed->key.data.numVal != index->data.numVal)
 		numIndexed = numIndexed->next;
 
-	if (!numIndexed)
-		avm_log(ERROR,"The element at index %s,"
-				" does not exist!\n",avm_to_string(index));
+	if (numIndexed) return &numIndexed->value;
+		
+	avm_log(ERROR,"The element at index %s,"
+			" does not exist!\n",avm_to_string(index));
 
-	return &numIndexed->value;
+	return NULL;
 }
 
 
@@ -109,11 +110,12 @@ static avm_memcell* str_bucket_get(
 		strcmp(strIndexed->key.data.strVal,index->data.strVal))
 		strIndexed = strIndexed->next;
 
-	if (!strIndexed)
-		avm_log(ERROR,"The element at index %s,"
-				" does not exist!\n",avm_to_string(index));
+	if (strIndexed)	return &strIndexed->value;
+		
+	avm_log(ERROR,"The element at index %s,"			
+			" does not exist!\n",avm_to_string(index));
 
-	return &strIndexed->value;
+	return NULL;
 }
 
 
@@ -135,11 +137,12 @@ static avm_memcell* lib_bucket_get(
 		libIndexed->key.data.libfuncVal == index->data.libfuncVal)
 		libIndexed = libIndexed->next;
 
-	if (!libIndexed)
-		avm_log(ERROR,"The element at index %s,"
-				" does not exist!\n",avm_to_string(index));
+	if (libIndexed)	return &libIndexed->value;
+		
+	avm_log(ERROR,"The element at index %s,"
+			" does not exist!\n",avm_to_string(index));
 
-	return &libIndexed->value;
+	return NULL;
 }
 
 /* Used to get an element from the userfuncs buckets */
@@ -160,11 +163,12 @@ static avm_memcell* userfunc_bucket_get(
 		userIndexed->key.data.funcVal == index->data.funcVal)
 		userIndexed = userIndexed->next;
 
-	if (!userIndexed)
-		avm_log(ERROR,"The element at index %s,"
-				" does not exist!\n",avm_to_string(index));
+	if (userIndexed) return &userIndexed->value;
+		
+	avm_log(ERROR,"The element at index %s,"
+			" does not exist!\n",avm_to_string(index));
 
-	return &userIndexed->value;
+	return NULL;
 }
 
 /* Array of getter functions */
