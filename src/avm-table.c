@@ -125,7 +125,7 @@ static avm_memcell* lib_bucket_get(
 {
 	assert(index->type == libfunc_m);	
 
-	int hash = string_hash(get_libFuncs(index->data.libfuncVal));
+	int hash = index->data.libfuncVal;
 	avm_table_bucket* libIndexed = table->libIndexed[hash];
 
 	/* library funcs may be in a list.
@@ -350,7 +350,7 @@ static int lib_bucket_set(
 {
 	assert(index->type == libfunc_m);	
 
-	int hash = string_hash(get_libFuncs(index->data.libfuncVal));
+	int hash = index->data.libfuncVal;
 	avm_table_bucket* libIndexed = table->libIndexed[hash];
 	avm_table_bucket	*node = NULL;
 

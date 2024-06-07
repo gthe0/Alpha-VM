@@ -70,6 +70,9 @@ struct avm_table_bucket
     avm_table_bucket *next;
 };
 
+#define AVM_LIB_FUNC_TOTAL 12
+#define AVM_BOOL_VALUES 2
+
 /* Definition of the avm table type */
 struct avm_table
 {
@@ -77,9 +80,10 @@ struct avm_table
 
     avm_table_bucket *strIndexed[AVM_TABLE_HASH_SIZE];
     avm_table_bucket *numIndexed[AVM_TABLE_HASH_SIZE];
-    avm_table_bucket *boolIndexed[AVM_TABLE_HASH_SIZE];
     avm_table_bucket *userIndexed[AVM_TABLE_HASH_SIZE];
-    avm_table_bucket *libIndexed[AVM_TABLE_HASH_SIZE];
+	
+    avm_table_bucket *libIndexed[AVM_LIB_FUNC_TOTAL];
+    avm_table_bucket *boolIndexed[AVM_BOOL_VALUES];
 
     unsigned total;
 };
@@ -115,8 +119,9 @@ void avm_table_dec_refcounter(avm_table *table);
 /**
 * @brief Initializes the buckets of a table
 * @param p Pointer to bucket to be initialized
+* @param no_buckets The number of elements in the array
 */
-void avm_table_buckets_init(avm_table_bucket** p);
+void avm_table_buckets_init(avm_table_bucket** p,unsigned no_buckets);
 
 /**
 * @brief Initializes a bucket of a table
@@ -134,8 +139,9 @@ avm_table* avm_table_new(void);
 /**
 * @brief Destroy a bucket of a table
 * @param p Pointer to the bucket to be initialized
+* @param no_buckets The number of elements in the array
 */
-void avm_table_buckets_destroy(avm_table_bucket** p);
+void avm_table_buckets_destroy(avm_table_bucket** p,unsigned no_buckets);
 
 /**
 * @brief Table destructor

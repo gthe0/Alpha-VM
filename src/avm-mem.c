@@ -95,10 +95,10 @@ void avm_table_dec_refcounter(avm_table *table) {
 		avm_table_destroy(table); 
 }
 
-void avm_table_buckets_init(avm_table_bucket** p)
+void avm_table_buckets_init(avm_table_bucket** p, unsigned no_buckets)
 {
 	/* Same as assigningn NULL to each bucket */
-	for (unsigned i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	for (unsigned i = 0; i < no_buckets; i++)
 		p[i] = (avm_table_bucket*)0; 
 }
 
@@ -110,11 +110,12 @@ avm_table* avm_table_new(void)
 
     table->refCounter = table->total = 0;
 
-    avm_table_buckets_init(table->numIndexed);
-    avm_table_buckets_init(table->strIndexed);
-    avm_table_buckets_init(table->boolIndexed);
-    avm_table_buckets_init(table->userIndexed);
-    avm_table_buckets_init(table->libIndexed);
+    avm_table_buckets_init(table->numIndexed,AVM_TABLE_HASH_SIZE);
+    avm_table_buckets_init(table->strIndexed,AVM_TABLE_HASH_SIZE);
+    avm_table_buckets_init(table->userIndexed,AVM_TABLE_HASH_SIZE);
+
+    avm_table_buckets_init(table->libIndexed,AVM_LIB_FUNC_TOTAL);
+    avm_table_buckets_init(table->boolIndexed,AVM_BOOL_VALUES);
 
     return table;
 }
@@ -136,9 +137,9 @@ void avm_mem_cell_clear(avm_memcell* m)
 }
 
 /* Destructor of the avm table buckets */
-void avm_table_buckets_destroy(avm_table_bucket** p)
+void avm_table_buckets_destroy(avm_table_bucket** p,unsigned no_buckets)
 {
-	for (unsigned i = 0; i < AVM_TABLE_HASH_SIZE ; i++, p++)
+	for (unsigned i = 0; i < no_buckets ; i++, p++)
 	{
 		for (avm_table_bucket* b = *p; b;)
 		{
@@ -159,11 +160,12 @@ void avm_table_buckets_destroy(avm_table_bucket** p)
 /* Destructor of the avm table buckets */
 void avm_table_destroy (avm_table* t)
 {
-	avm_table_buckets_destroy(t->numIndexed);
-	avm_table_buckets_destroy(t->strIndexed);
-	avm_table_buckets_destroy(t->boolIndexed);
-	avm_table_buckets_destroy(t->userIndexed);
-	avm_table_buckets_destroy(t->libIndexed);
+	avm_table_buckets_destroy(t->numIndexed,AVM_TABLE_HASH_SIZE);
+	avm_table_buckets_destroy(t->strIndexed,AVM_TABLE_HASH_SIZE);
+	avm_table_buckets_destroy(t->userIndexed,AVM_TABLE_HASH_SIZE);
+
+	avm_table_buckets_destroy(t->libIndexed,AVM_LIB_FUNC_TOTAL);
+	avm_table_buckets_destroy(t->boolIndexed,AVM_BOOL_VALUES);
 
 	free(t);
 }
@@ -401,7 +403,7 @@ avm_table* avm_table_getkeys(avm_memcell* table)
 	int counter_index = 0;
 
 	/* Copy all the buckets of each bucket array*/
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < AVM_BOOL_VALUES; i++)
 	{
 		t_curr = oldtable->boolIndexed[i]; 
 
@@ -461,7 +463,7 @@ avm_table* avm_table_getkeys(avm_memcell* table)
 		}
 	}
 	
-	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	for (int i = 0; i < AVM_LIB_FUNC_TOTAL; i++)
 	{
 		t_curr = oldtable->libIndexed[i]; 
 		while (t_curr){
@@ -489,7 +491,7 @@ avm_table* avm_table_copy(avm_memcell* table)
 
 	avm_table_bucket* t_curr = NULL;
 	/* Copy all the buckets of each bucket array*/
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < AVM_BOOL_VALUES; i++)
 	{
 		t_curr = oldtable->boolIndexed[i]; 
 
@@ -529,7 +531,7 @@ avm_table* avm_table_copy(avm_memcell* table)
 		}
 	}
 	
-	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	for (int i = 0; i < AVM_LIB_FUNC_TOTAL; i++)
 	{
 		t_curr = oldtable->libIndexed[i]; 
 

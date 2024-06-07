@@ -84,7 +84,7 @@ static char* table_to_string(avm_memcell* m)
 	 If the string returned in not NULL, then add its length
 	 to the final string length
 	*/
-	for (int i = 0; i < 2 ; i++)
+	for (int i = 0; i < AVM_BOOL_VALUES ; i++)
 	{
 		string = avm_bucket_tostring(table,table->boolIndexed[i]);
 
@@ -128,7 +128,7 @@ static char* table_to_string(avm_memcell* m)
 		}		
 	}
 
-	for (int i = 0; i < AVM_TABLE_HASH_SIZE ; i++)
+	for (int i = 0; i < AVM_LIB_FUNC_TOTAL ; i++)
 	{
 		string = avm_bucket_tostring(table,table->libIndexed[i]);
 
