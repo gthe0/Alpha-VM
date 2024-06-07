@@ -479,6 +479,21 @@ avm_table* avm_table_getkeys(avm_memcell* table)
 		}
 	}
 
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->tableIndexed[i]; 
+		while (t_curr){
+
+			avm_memcell* new_index = malloc(sizeof(avm_memcell));
+			new_index->type = number_m;
+			new_index->data.numVal = counter_index++;
+
+			avm_tablesetelem(newtable,new_index,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
+
+
 	return newtable;	
 }
 
@@ -536,6 +551,16 @@ avm_table* avm_table_copy(avm_memcell* table)
 	for (int i = 0; i < AVM_LIB_FUNC_TOTAL; i++)
 	{
 		t_curr = oldtable->libIndexed[i]; 
+
+		while (t_curr){
+			avm_tablesetelem(newtable,&t_curr->key,&t_curr->value);
+			t_curr = t_curr->next;
+		}
+	}
+
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE; i++)
+	{
+		t_curr = oldtable->tableIndexed[i]; 
 
 		while (t_curr){
 			avm_tablesetelem(newtable,&t_curr->key,&t_curr->value);

@@ -188,7 +188,7 @@ static avm_memcell* table_bucket_get(
 		tableIndexed &&
 		tableIndexed->key.data.tableVal != index->data.tableVal)
 		tableIndexed = tableIndexed->next;
-
+	
 	if (tableIndexed) return &tableIndexed->value;
 		
 	avm_log(ERROR,"The element at index %s,"
@@ -568,11 +568,13 @@ avm_memcell* avm_tablegetelem (
 	assert(table && index);
 	table_getter_t f = table_get[index->type];
 
-	if(f) return (*f)(table,index);
+	avm_memcell* res = NULL;
+
+	if(f) res = (*f)(table,index);
 	else 
 		avm_log(ERROR,"%s cannot be used for indexing\n",typeString[index->type]);
 
-	return NULL;
+	return res;
 }
 
 /* avm table bucket setter*/

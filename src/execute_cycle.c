@@ -88,7 +88,6 @@ void execute_cycle (void) {
 
         unsigned oldPC = pc;
 
-		printf("%u\n",pc);
         (*executeFuncs[instr->opcode])(instr);
 
         if (pc == oldPC)

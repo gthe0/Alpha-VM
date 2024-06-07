@@ -139,12 +139,23 @@ static char* table_to_string(avm_memcell* m)
 		}
 	}
 
+	for (int i = 0; i < AVM_TABLE_HASH_SIZE ; i++)
+	{
+		string = avm_bucket_tostring(table,table->tableIndexed[i]);
+
+		if(string)
+		{
+			table_str[curr++] = string ;		
+			final_str_len += strlen(string);
+		}
+	}
+
 	/* Now we just need to concantinate the strings... */
-	string = malloc(final_str_len*sizeof(char)+1);
+	string = malloc(final_str_len*sizeof(char)+2);
 	assert(string);
 
 
-	for (int i = 0; i < final_str_len+1; i++)
+	for (int i = 0; i < final_str_len+2; i++)
 	{
 		string[i] = '\0'; 
 	}
