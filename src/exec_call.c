@@ -47,6 +47,32 @@ void call_userFuncs(avm_memcell* m,Instruction_T instr)
 
 void call_functor(avm_memcell* m,Instruction_T instr)
 {
+	assert(m && m->type == table_m);
+
+	avm_memcell functor_index;
+
+	/* Create the functor Index */
+	functor_index.type = string_m;
+	functor_index.data.strVal = "()";
+
+	avm_memcell* result = avm_tablegetelem(m->data.tableVal,&functor_index);
+	assert(result);
+
+	if(result->type != userfunc_m)
+	{
+		avm_log(ERROR,"%s is not a functor!\n",avm_to_string(result));		
+		return;
+	}
+
+	/* Code to pusharg (copied from exec_pusharg) */	
+	avm_assign(&stack[top], m);
+	++totalActuals;
+	avm_dec_top();
+
+	/* Code to call function (copied from call_userFunc)*/
+	avm_call_saveenvironment();
+	pc = get_UserFunc(result->data.funcVal).address;
+
 	return;
 }
 

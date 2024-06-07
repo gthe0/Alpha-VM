@@ -343,7 +343,7 @@ static int str_bucket_set(
 	return ADDED_MEM;
 	
 }
-
+#include <stdio.h>
 
 /* Used to get an element from the libfuncs buckets */
 static int lib_bucket_set(
@@ -358,7 +358,7 @@ static int lib_bucket_set(
 	avm_table_bucket* libIndexed = table->libIndexed[hash];
 	avm_table_bucket	*node = NULL;
 
-	if(!libIndexed)
+	if(libIndexed == NULL)
 	{
 		table->libIndexed[hash] = malloc(sizeof(avm_table_bucket));
 		table->libIndexed[hash]->key = *index;
@@ -368,7 +368,7 @@ static int lib_bucket_set(
 		if (content->type == string_m)
 			table->libIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
 
-		 ADDED_MEM;
+		return ADDED_MEM;
 	}
 
 	/* Numbers may be in a list.
