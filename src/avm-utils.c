@@ -265,12 +265,19 @@ int is_num(char* input)
 
 	while ((c = *input) != '\0')
 	{
-		if(c < '0' || c > '9' || (c =='.' && !has_dot++))
+
+		if (c =='.')
+		{
+			if(has_dot++)
+				return 0;
+		}
+		else
+		if(c < '0' || c > '9')
 			return 0;
 
 		input++;		
 	}
-
+	
 	/* If we did not return thus far, 
 	then the input is a number, return 1*/
 	return 1;

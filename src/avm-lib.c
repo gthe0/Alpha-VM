@@ -120,6 +120,9 @@ static void libfunc_sin(void)
 		if(num->type != number_m)
 		{
 			avm_log(ERROR,"Argument of 'sin' was not a number\n");
+			retval = *num;
+			retval.type = nil_m;
+
 			return;
 		}
 
@@ -146,6 +149,9 @@ static void libfunc_cos(void)
 		if(num->type != number_m)
 		{
 			avm_log(ERROR,"Argument of 'cos' was not a number\n");
+			retval = *num;
+			retval.type = nil_m;
+
 			return;
 		}
 
@@ -171,6 +177,9 @@ static void libfunc_sqrt(void)
 		if(num->type != number_m)
 		{
 			avm_log(ERROR,"Argument of 'sqrt' was not a number\n");
+			retval = *num;
+			retval.type = nil_m;
+
 			return;
 		}
 
@@ -179,6 +188,7 @@ static void libfunc_sqrt(void)
 		{
 			avm_log(WARNING,"'sqrt' called with negative argument %lf\n", num->data.numVal);
 			retval = *num;
+			retval.type = nil_m;
 
 			return;
 		}
@@ -204,16 +214,27 @@ void libfunc_strtonum(void)
 		avm_mem_cell_clear(&retval);
 		avm_memcell* str = avm_getactual(0);
 
-		char* endptr;
-
 		if(str->type != string_m)
 		{
 			avm_log(ERROR,"Argument of 'strtonum' was not a string\n");
+			retval = *str;
+			retval.type = nil_m;
+			
 			return;
 		}
 
-		retval.type = number_m;
-		retval.data.numVal = strtod(str->data.strVal, &endptr);
+		if(is_num(str->data.strVal))
+		{
+			retval.type = number_m;
+			retval.data.numVal = atof(str->data.strVal);
+		}
+		else
+		{
+			retval = *str;
+			retval.type = nil_m;
+		}
+
+		return;
 	}
 }
 

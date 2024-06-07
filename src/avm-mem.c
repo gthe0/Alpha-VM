@@ -32,7 +32,7 @@ typedef void (*memclear_func_t)(avm_memcell*);
 static void memclear_string(avm_memcell* m)
 {
 	assert(m->data.strVal);
-	free(m->data.strVal);
+	//free(m->data.strVal);
 }
 
 /**

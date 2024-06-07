@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef int (*transfer_logic_func_t)	(double x, double y);
 
@@ -88,6 +89,8 @@ static unsigned char avm_tobool(avm_memcell* m)
 	return (*toBoolFuncs[m->type])(m);
 }
 
+#define FLOAT_LOW_BOUND 0.0000001
+
 /* jeq label arg1 arg2 */
 void execute_jeq(Instruction_T instr)
 {
@@ -119,7 +122,7 @@ void execute_jeq(Instruction_T instr)
 		switch (rv1->type)
 		{		
 			case number_m:
-				result = rv1->data.numVal == rv2->data.numVal;
+				result = fabs(rv1->data.numVal - rv2->data.numVal) < FLOAT_LOW_BOUND;
 				break;
 			case string_m:
 				result = !strcmp(rv1->data.strVal, rv2->data.strVal);
@@ -179,7 +182,7 @@ void execute_jne(Instruction_T instr)
 		switch (rv1->type)
 		{		
 			case number_m:
-				result = rv1->data.numVal == rv2->data.numVal;
+				result = fabs(rv1->data.numVal - rv2->data.numVal) < FLOAT_LOW_BOUND;
 				break;
 			case string_m:
 				result = !strcmp(rv1->data.strVal, rv2->data.strVal);
