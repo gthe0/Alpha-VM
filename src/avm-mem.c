@@ -113,6 +113,7 @@ avm_table* avm_table_new(void)
     avm_table_buckets_init(table->numIndexed,AVM_TABLE_HASH_SIZE);
     avm_table_buckets_init(table->strIndexed,AVM_TABLE_HASH_SIZE);
     avm_table_buckets_init(table->userIndexed,AVM_TABLE_HASH_SIZE);
+    avm_table_buckets_init(table->tableIndexed,AVM_TABLE_HASH_SIZE);
 
     avm_table_buckets_init(table->libIndexed,AVM_LIB_FUNC_TOTAL);
     avm_table_buckets_init(table->boolIndexed,AVM_BOOL_VALUES);
@@ -163,6 +164,7 @@ void avm_table_destroy (avm_table* t)
 	avm_table_buckets_destroy(t->numIndexed,AVM_TABLE_HASH_SIZE);
 	avm_table_buckets_destroy(t->strIndexed,AVM_TABLE_HASH_SIZE);
 	avm_table_buckets_destroy(t->userIndexed,AVM_TABLE_HASH_SIZE);
+	avm_table_buckets_destroy(t->tableIndexed,AVM_TABLE_HASH_SIZE);
 
 	avm_table_buckets_destroy(t->libIndexed,AVM_LIB_FUNC_TOTAL);
 	avm_table_buckets_destroy(t->boolIndexed,AVM_BOOL_VALUES);

@@ -81,6 +81,7 @@ struct avm_table
     avm_table_bucket *strIndexed[AVM_TABLE_HASH_SIZE];
     avm_table_bucket *numIndexed[AVM_TABLE_HASH_SIZE];
     avm_table_bucket *userIndexed[AVM_TABLE_HASH_SIZE];
+    avm_table_bucket *tableIndexed[AVM_TABLE_HASH_SIZE];
 	
     avm_table_bucket *libIndexed[AVM_LIB_FUNC_TOTAL];
     avm_table_bucket *boolIndexed[AVM_BOOL_VALUES];

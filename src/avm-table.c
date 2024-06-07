@@ -134,7 +134,7 @@ static avm_memcell* lib_bucket_get(
 	*/
 	while (
 		libIndexed &&
-		libIndexed->key.data.libfuncVal == index->data.libfuncVal)
+		libIndexed->key.data.libfuncVal != index->data.libfuncVal)
 		libIndexed = libIndexed->next;
 
 	if (libIndexed)	return &libIndexed->value;
@@ -160,10 +160,36 @@ static avm_memcell* userfunc_bucket_get(
 	*/
 	while (
 		userIndexed &&
-		userIndexed->key.data.funcVal == index->data.funcVal)
+		userIndexed->key.data.funcVal != index->data.funcVal)
 		userIndexed = userIndexed->next;
 
 	if (userIndexed) return &userIndexed->value;
+		
+	avm_log(ERROR,"The element at index %s,"
+			" does not exist!\n",avm_to_string(index));
+
+	return NULL;
+}
+
+/* Used to get an element from the userfuncs buckets */
+static avm_memcell* table_bucket_get(
+	avm_table* table,
+	avm_memcell* index
+)
+{
+	assert(index->type == table_m);	
+
+	int hash = ((long)index->data.tableVal % AVM_TABLE_HASH_SIZE);
+	avm_table_bucket* tableIndexed = table->tableIndexed[hash];
+
+	/* library funcs may be in a list.
+	*/
+	while (
+		tableIndexed &&
+		tableIndexed->key.data.tableVal != index->data.tableVal)
+		tableIndexed = tableIndexed->next;
+
+	if (tableIndexed) return &tableIndexed->value;
 		
 	avm_log(ERROR,"The element at index %s,"
 			" does not exist!\n",avm_to_string(index));
@@ -176,7 +202,7 @@ static table_getter_t table_get[] = {
 	number_bucket_get,
 	str_bucket_get,
 	bool_bucket_get,
-	NULL, /* table */
+	table_bucket_get,
 	userfunc_bucket_get,
 	lib_bucket_get,
 	NULL, /* nil */
@@ -343,7 +369,7 @@ static int str_bucket_set(
 	return ADDED_MEM;
 	
 }
-#include <stdio.h>
+
 
 /* Used to get an element from the libfuncs buckets */
 static int lib_bucket_set(
@@ -463,12 +489,70 @@ static int userfunc_bucket_set(
 }
 
 
+/* Used to set an element from the userfuncs buckets */
+static int table_bucket_set(
+	avm_table* table,
+	avm_memcell* index,
+	avm_memcell* content
+)
+{
+	assert(index->type == table_m);	
+
+	int hash = ((long)index->data.tableVal % AVM_TABLE_HASH_SIZE);
+	avm_table_bucket* tableIndexed = table->tableIndexed[hash];
+	avm_table_bucket	*node = NULL;
+
+	if(!tableIndexed)
+	{
+		table->tableIndexed[hash] = malloc(sizeof(avm_table_bucket));
+		table->tableIndexed[hash]->key = *index;
+		table->tableIndexed[hash]->value = *content;
+		table->tableIndexed[hash]->next= NULL;
+
+		if (content->type == string_m)
+			table->tableIndexed[hash]->value.data.strVal = strdup(content->data.strVal);	
+
+		return ADDED_MEM;
+	}
+
+	/* Numbers may be in a list.
+	*/
+	while (
+		tableIndexed &&
+		tableIndexed->key.data.tableVal != index->data.tableVal &&
+		tableIndexed->next)
+		tableIndexed = tableIndexed->next;
+
+	/* If we reach the end, do not execute this block*/
+	if (tableIndexed->key.data.tableVal == index->data.tableVal)
+	{
+		tableIndexed->value = *content;
+
+		if(content->type == string_m)
+			tableIndexed->value.data.strVal = strdup(content->data.strVal);
+		
+		return NO_NEW_MEM;
+	}
+
+	node = malloc(sizeof(avm_table_bucket));	
+	node->next = NULL;
+	node->key = *index;
+	node->value = *content;
+
+	if (content->type == string_m)
+		node->value.data.strVal = strdup(content->data.strVal);	
+
+	tableIndexed->next = node;
+
+	return ADDED_MEM;	
+}
+
 /* Array of getter functions */
 static table_setter_t table_set[] = {
 	number_bucket_set,
 	str_bucket_set,
 	bool_bucket_set,
-	NULL, /* table */
+	table_bucket_set,
 	userfunc_bucket_set,
 	lib_bucket_set,
 	NULL, /* nil */
@@ -502,19 +586,11 @@ void avm_tablesetelem (
 	int t = 0;
 	table_setter_t f = table_set[index->type];
 
-	if(content->type == table_m)
-	{
-		/* I define that it is illegal to recurcively 
-		set the table itself as its elements, is illegal */
-		if (content->data.tableVal == table)
-		{
-			avm_log(ERROR,"Setting the table itself as an element"
-						" of the table is illegal\n");
+	if(index->type == table_m)
+		avm_table_inc_refcounter(index->data.tableVal);
 
-			return ;
-		}
+	if(content->type == table_m)
 		avm_table_inc_refcounter(content->data.tableVal);
-	}
 
 	if(f) t = (*f)(table,index,content);
 	else 

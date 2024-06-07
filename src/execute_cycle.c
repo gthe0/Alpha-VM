@@ -87,7 +87,8 @@ void execute_cycle (void) {
             currLine = instr->srcLine;
 
         unsigned oldPC = pc;
-		
+
+		printf("%u\n",pc);
         (*executeFuncs[instr->opcode])(instr);
 
         if (pc == oldPC)
